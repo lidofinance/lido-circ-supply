@@ -2,6 +2,9 @@ import { Inject, Injectable, LoggerService } from '@nestjs/common';
 import { LIDO_CONTRACT_TOKEN, Lido } from '@lido-nestjs/contracts';
 import { Block } from '@ethersproject/abstract-provider';
 import { LOGGER_PROVIDER } from '@lido-nestjs/logger';
+import { InjectMetric } from '@willsoto/nestjs-prometheus';
+import { METRIC_TOKEN_SUPPLY_DATA } from 'common/prometheus';
+import { Gauge } from 'prom-client';
 import { TokenCircSupplyDataV1, TokenService } from '../token';
 
 @Injectable()
@@ -12,8 +15,11 @@ export class StethService extends TokenService {
 
     @Inject(LIDO_CONTRACT_TOKEN)
     protected readonly contract: Lido,
+
+    @InjectMetric(METRIC_TOKEN_SUPPLY_DATA)
+    protected readonly metricToken: Gauge<string>,
   ) {
-    super(logger, contract.provider);
+    super(logger, contract.provider, metricToken);
   }
 
   protected contractName = 'steth';
@@ -21,12 +27,10 @@ export class StethService extends TokenService {
   protected async getSupplyFromContract(
     blockInfo: Block,
   ): Promise<TokenCircSupplyDataV1> {
+    // We fetch data from the contract by block hash, to be sure, that all data from the same block
     const overrides = { blockTag: { blockHash: blockInfo.hash } } as any;
     const totalSupply = await this.contract.totalSupply(overrides);
 
-    return {
-      totalSupply: totalSupply.toHexString(),
-      circSupply: totalSupply.toHexString(),
-    };
+    return { totalSupply, circSupply: totalSupply };
   }
 }

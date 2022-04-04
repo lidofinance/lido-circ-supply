@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { BigNumber } from '@ethersproject/bignumber';
 
 const example = {
   totalSupply: '0x0de0b6b3a7640000',
@@ -27,6 +28,6 @@ export class TokenCircSupplyV1 {
 }
 
 export interface TokenCircSupplyDataV1 {
-  totalSupply: string;
-  circSupply: string;
+  totalSupply: BigNumber;
+  circSupply: BigNumber;
 }

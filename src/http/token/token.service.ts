@@ -1,23 +1,17 @@
-import {
-  Inject,
-  Injectable,
-  LoggerService,
-  OnModuleInit,
-} from '@nestjs/common';
+import { LoggerService, OnModuleInit } from '@nestjs/common';
+import { Gauge } from 'prom-client';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { Block } from '@ethersproject/abstract-provider';
 import { Provider } from '@ethersproject/providers';
-import { LOGGER_PROVIDER } from '@lido-nestjs/logger';
+import { BigNumber } from '@ethersproject/bignumber';
 import { OneAtTime } from 'common/decorators';
 import { TokenCircSupplyV1, TokenCircSupplyDataV1 } from './token.entity';
 
-@Injectable()
 export abstract class TokenService implements OnModuleInit {
   constructor(
-    @Inject(LOGGER_PROVIDER)
     protected readonly logger: LoggerService,
-
     protected readonly provider: Provider,
+    protected readonly metricToken: Gauge<string>,
   ) {}
 
   public async onModuleInit() {
@@ -55,23 +49,25 @@ export abstract class TokenService implements OnModuleInit {
       const supply = await this.getSupplyFromContract(blockInfo);
 
       this.supplyData = {
-        ...supply,
+        totalSupply: supply.totalSupply.toHexString(),
+        circSupply: supply.circSupply.toHexString(),
         blockNumber,
         blockHash,
         blockTimestamp,
       };
 
-      // TODO: add metric
-
       this.logger.log('Supply data updated', {
         contract: this.contractName,
         newData: this.supplyData,
       });
+
+      this.updateMetrics();
     } catch (error) {
       this.logger.error(error);
     }
   }
 
+  /** Checks if the block is newer than the cached one */
   protected isNewBlock(blockInfo: Block) {
     const isSameBlock = blockInfo.hash === this.supplyData?.blockHash;
     if (isSameBlock) {
@@ -89,5 +85,23 @@ export abstract class TokenService implements OnModuleInit {
     }
 
     return true;
+  }
+
+  /** Updates token metrics */
+  protected updateMetrics() {
+    this.metricToken.set(
+      { token: this.contractName, field: 'circ-supply' },
+      BigNumber.from(this.supplyData.circSupply).div(1e9).div(1e9).toNumber(),
+    );
+
+    this.metricToken.set(
+      { token: this.contractName, field: 'total-supply' },
+      BigNumber.from(this.supplyData.totalSupply).div(1e9).div(1e9).toNumber(),
+    );
+
+    this.metricToken.set(
+      { token: this.contractName, field: 'timestamp' },
+      this.supplyData.blockTimestamp,
+    );
   }
 }

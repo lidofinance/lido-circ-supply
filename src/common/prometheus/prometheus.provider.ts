@@ -1,5 +1,12 @@
-import { makeHistogramProvider } from '@willsoto/nestjs-prometheus';
-import { METRIC_HTTP_REQUEST_DURATION } from './prometheus.constants';
+import {
+  makeGaugeProvider,
+  makeHistogramProvider,
+} from '@willsoto/nestjs-prometheus';
+import {
+  METRIC_HTTP_REQUEST_DURATION,
+  METRIC_VESTING_DATA,
+  METRIC_TOKEN_SUPPLY_DATA,
+} from './prometheus.constants';
 
 export const PrometheusRequestsHistogramProvider = makeHistogramProvider({
   name: METRIC_HTTP_REQUEST_DURATION,
@@ -8,5 +15,16 @@ export const PrometheusRequestsHistogramProvider = makeHistogramProvider({
   labelNames: ['statusCode', 'method', 'pathname'] as const,
 });
 
+export const PrometheusVestingGaugeProvider = makeGaugeProvider({
+  name: METRIC_VESTING_DATA,
+  help: 'Vesting data',
+  labelNames: ['token', 'field'] as const,
+});
+
+export const PrometheusTokenSupplyGaugeProvider = makeGaugeProvider({
+  name: METRIC_TOKEN_SUPPLY_DATA,
+  help: 'Token supply data',
+  labelNames: ['token', 'field'] as const,
+});
+
 // TODO: add metrics for execution layer provider: errors counter, histogram, etc.
-// TODO: add metrics for updating supply data
