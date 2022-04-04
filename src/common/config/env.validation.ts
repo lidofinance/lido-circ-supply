@@ -6,6 +6,8 @@ import {
   IsOptional,
   validateSync,
   Min,
+  IsArray,
+  ArrayMinSize,
 } from 'class-validator';
 import { Environment, LogLevel, LogFormat } from './interfaces';
 
@@ -61,6 +63,15 @@ export class EnvironmentVariables {
   @IsEnum(LogFormat)
   @Transform(({ value }) => value || LogFormat.json)
   LOG_FORMAT: LogFormat;
+
+  @IsArray()
+  @ArrayMinSize(1)
+  @Transform(({ value }) => value.split(','))
+  EL_API_URLS: string[];
+
+  @IsNumber()
+  @Transform(({ value }) => Number(value))
+  CHAIN_ID: number;
 }
 
 export function validate(config: Record<string, unknown>) {

@@ -1,4 +1,8 @@
-## Lido API Template
+# Lido Circ Supply
+
+TODO: describe swagger docs
+TODO: available endpoints
+TODO: env vars
 
 ## Installation
 
@@ -34,4 +38,4 @@ $ yarn test:cov
 
 ## License
 
-API Template is [MIT licensed](LICENSE).
+Lido Circ Supply is [MIT licensed](LICENSE).

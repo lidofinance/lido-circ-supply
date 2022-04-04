@@ -7,3 +7,6 @@ export const PrometheusRequestsHistogramProvider = makeHistogramProvider({
   buckets: [0.01, 0.1, 0.2, 0.5, 1, 1.5, 2, 5],
   labelNames: ['statusCode', 'method', 'pathname'] as const,
 });
+
+// TODO: add metrics for execution layer provider: errors counter, histogram, etc.
+// TODO: add metrics for updating supply data

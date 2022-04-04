@@ -20,6 +20,7 @@ export class HealthController {
   check() {
     return this.health.check([
       async () => this.memory.checkHeap('memoryHeap', 1024 * 1024 * 1024),
+      // TODO: check data available
     ]);
   }
 }

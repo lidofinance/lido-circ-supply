@@ -1,7 +1,7 @@
 {
-  "name": "lido-api-template",
+  "name": "lido-circ-supply",
   "version": "0.0.1",
-  "description": "Lido API Template",
+  "description": "Lido Circ Supply",
   "author": "Lido team",
   "private": true,
   "license": "MIT",
@@ -21,11 +21,15 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@lido-nestjs/logger": "^1.0.1",
+    "@lido-nestjs/contracts": "^1.2.1",
+    "@lido-nestjs/execution": "^1.4.0",
+    "@lido-nestjs/logger": "^1.1.0",
+    "@lido-nestjs/utils": "^1.0.0",
     "@nestjs/common": "^8.2.5",
     "@nestjs/config": "^1.1.6",
     "@nestjs/core": "^8.2.5",
     "@nestjs/platform-fastify": "^8.2.5",
+    "@nestjs/schedule": "^1.1.0",
     "@nestjs/swagger": "^5.1.5",
     "@nestjs/terminus": "^8.0.4",
     "@nestjs/throttler": "^2.0.0",

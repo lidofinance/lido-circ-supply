@@ -4,13 +4,13 @@ import {
   LoggerService,
   NestMiddleware,
 } from '@nestjs/common';
-import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import { LOGGER_PROVIDER } from '@lido-nestjs/logger';
 import { Request, Reply } from './interfaces';
 
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
   constructor(
-    @Inject(WINSTON_MODULE_NEST_PROVIDER)
+    @Inject(LOGGER_PROVIDER)
     private readonly logger: LoggerService,
   ) {}
 
