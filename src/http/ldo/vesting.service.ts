@@ -9,8 +9,8 @@ import { Block } from '@ethersproject/abstract-provider';
 import { BigNumber } from '@ethersproject/bignumber';
 import { VestingInfo } from './interfaces';
 import { InjectMetric } from '@willsoto/nestjs-prometheus';
-import { METRIC_VESTING_DATA } from 'common/prometheus';
 import { Gauge } from 'prom-client';
+import { METRIC_VESTING_DATA } from 'common/prometheus';
 
 @Injectable()
 export class LdoVestingService {

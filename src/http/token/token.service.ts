@@ -1,10 +1,8 @@
 import { LoggerService, OnModuleInit } from '@nestjs/common';
 import { Gauge } from 'prom-client';
-import { Cron, CronExpression } from '@nestjs/schedule';
 import { Block } from '@ethersproject/abstract-provider';
 import { Provider } from '@ethersproject/providers';
 import { BigNumber } from '@ethersproject/bignumber';
-import { OneAtTime } from 'common/decorators';
 import { TokenCircSupplyV1, TokenCircSupplyDataV1 } from './token.entity';
 
 export abstract class TokenService implements OnModuleInit {
@@ -29,8 +27,6 @@ export abstract class TokenService implements OnModuleInit {
     blockInfo: Block,
   ): Promise<TokenCircSupplyDataV1>;
 
-  @Cron(CronExpression.EVERY_MINUTE)
-  @OneAtTime()
   protected async updateSupplyData(): Promise<void> {
     this.logger.log('Supply data updating', {
       contract: this.contractName,

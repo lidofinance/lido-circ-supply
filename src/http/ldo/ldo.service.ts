@@ -1,4 +1,5 @@
 import { Inject, Injectable, LoggerService } from '@nestjs/common';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import {
   LIDO_CONTRACT_TOKEN,
   LDO_CONTRACT_TOKEN,
@@ -10,8 +11,9 @@ import { CallOverrides } from '@ethersproject/contracts';
 import { BigNumber } from '@ethersproject/bignumber';
 import { LOGGER_PROVIDER } from '@lido-nestjs/logger';
 import { InjectMetric } from '@willsoto/nestjs-prometheus';
-import { METRIC_TOKEN_SUPPLY_DATA } from 'common/prometheus';
 import { Gauge } from 'prom-client';
+import { METRIC_TOKEN_SUPPLY_DATA } from 'common/prometheus';
+import { OneAtTime } from 'common/decorators';
 import { LdoVestingService } from './vesting.service';
 import { OVERLAPPING_REORG_OFFSET } from './ldo.constants';
 import { TokenCircSupplyDataV1, TokenService } from '../token';
@@ -83,5 +85,11 @@ export class LdoService extends TokenService {
       cachedVestings,
       blockInfo.timestamp,
     );
+  }
+
+  @Cron(CronExpression.EVERY_MINUTE)
+  @OneAtTime()
+  protected async updateSupplyData(): Promise<void> {
+    super.updateSupplyData();
   }
 }
