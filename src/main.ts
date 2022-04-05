@@ -21,11 +21,10 @@ async function bootstrap() {
 
   // config
   const configService: ConfigService = app.get(ConfigService);
-  const options = { infer: true };
-  const environment = configService.get('NODE_ENV', options);
-  const appPort = configService.get('PORT', options);
-  const corsWhitelist = configService.get('CORS_WHITELIST_REGEXP', options);
-  const sentryDsn = configService.get('SENTRY_DSN', options);
+  const environment = configService.get('NODE_ENV');
+  const appPort = configService.get('PORT');
+  const corsWhitelist = configService.get('CORS_WHITELIST_REGEXP');
+  const sentryDsn = configService.get('SENTRY_DSN');
 
   // versions
   app.enableVersioning({ type: VersioningType.URI });

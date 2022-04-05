@@ -35,8 +35,8 @@ const contractOptions = {
     FallbackProviderModule.forRootAsync({
       async useFactory(configService: ConfigService) {
         return {
-          urls: configService.get('EL_API_URLS', { infer: true }),
-          network: configService.get('CHAIN_ID', { infer: true }),
+          urls: configService.get('EL_API_URLS'),
+          network: configService.get('CHAIN_ID'),
         };
       },
       inject: [ConfigService],

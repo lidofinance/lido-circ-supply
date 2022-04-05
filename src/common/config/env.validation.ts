@@ -1,3 +1,4 @@
+import { NonEmptyArray } from '@lido-nestjs/execution/dist/interfaces/non-empty-array';
 import { plainToClass, Transform } from 'class-transformer';
 import {
   IsEnum,
@@ -67,7 +68,7 @@ export class EnvironmentVariables {
   @IsArray()
   @ArrayMinSize(1)
   @Transform(({ value }) => value.split(','))
-  EL_API_URLS: string[];
+  EL_API_URLS: NonEmptyArray<string>;
 
   @IsNumber()
   @Transform(({ value }) => Number(value))
