@@ -7,3 +7,6 @@ export const METRIC_HTTP_REQUEST_DURATION = `${METRICS_PREFIX}http_requests_dura
 
 export const METRIC_VESTING_DATA = `${METRICS_PREFIX}vesting_data`;
 export const METRIC_TOKEN_SUPPLY_DATA = `${METRICS_PREFIX}token_supply_data`;
+
+export const METRIC_EL_RPC_REQUEST_DURATION = `${METRICS_PREFIX}el_rpc_requests_duration_seconds`;
+export const METRIC_EL_RPC_REQUEST_ERRORS = `${METRICS_PREFIX}el_rpc_requests_errors_total`;

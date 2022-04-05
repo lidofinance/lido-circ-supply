@@ -3,6 +3,8 @@ import {
   PrometheusRequestsHistogramProvider,
   PrometheusVestingGaugeProvider,
   PrometheusTokenSupplyGaugeProvider,
+  PrometheusELRPCRequestsHistogramProvider,
+  PrometheusELRPCErrorsCounterProvider,
 } from './prometheus.provider';
 import { METRICS_PREFIX, METRICS_URL } from './prometheus.constants';
 import { PrometheusController } from './prometheus.controller';
@@ -20,6 +22,8 @@ const providers = [
   PrometheusRequestsHistogramProvider,
   PrometheusVestingGaugeProvider,
   PrometheusTokenSupplyGaugeProvider,
+  PrometheusELRPCRequestsHistogramProvider,
+  PrometheusELRPCErrorsCounterProvider,
 ];
 
 PrometheusModule.global = true;
