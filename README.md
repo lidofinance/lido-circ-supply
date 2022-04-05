@@ -33,11 +33,23 @@ To calculate the number of non vested tokens, we first get all the members of th
 
 ```ts
 const newFilter = tmContract.filters.NewVesting();
-const newEvents = await tmContract.queryFilter(newFilter);
-
-// Since we get updates only for new blocks while the server is running, we also look at RevokeVesting events to make sure that programs will be updated in the case of a vesting revoke
 const revokeFilter = tmContract.filters.RevokeVesting();
-const revokeEvents = await tmContract.queryFilter(revokeFilter);
+
+/**
+ * Since we get updates only for new blocks while the server is running,
+ * we also look at RevokeVesting events to make sure that programs will be
+ * updated in the case of a vesting revoke
+ */
+
+const [newEvents, revokeEvents] = await Promise.all([
+  tmContract.queryFilter(newFilter),
+  tmContract.queryFilter(revokeFilter),
+]);
+
+const updatedMembers = new Set<string>();
+
+newEvents.forEach((event) => updatedMembers.add(event.args.receiver));
+revokeEvents.forEach((event) => updatedMembers.add(event.args.receiver));
 ```
 
 Then for each member we get the number of their vestings:
