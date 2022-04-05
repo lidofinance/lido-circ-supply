@@ -1,13 +1,96 @@
 # Lido Circ Supply
 
-TODO: describe swagger docs
-TODO: available endpoints
-TODO: env vars
+Service returns circ supply for Lido tokens.
 
-## Installation
+## Endpoints
+
+After the server starts, Swagger will be available at `/api`.
+
+### LDO
+
+Circ supply is calculated by the formula:
+
+```
+Circ supply = Total LDO supply - LDO tokens in Lido treasury - Non vested tokens
+```
+
+#### Total LDO supply
+
+```ts
+const totalSupply = await ldoContract.totalSupply();
+```
+
+#### LDO tokens in Lido treasury
+
+```ts
+const treasuryAddress = await lidoContract.getTreasury();
+const treasuryBalance = await ldoContract.balanceOf(treasuryAddress);
+```
+
+#### Non vested tokens
+
+To calculate the number of non vested tokens, we first get all the members of the vesting program using events emitted on the token manager contract:
+
+```ts
+const newFilter = tmContract.filters.NewVesting();
+const revokeFilter = tmContract.filters.RevokeVesting();
+
+const newEvents = await tmContract.queryFilter(newFilter);
+const revokeEvents = await tmContract.queryFilter(revokeFilter);
+```
+
+Then for each member we get the number of their vestings:
+
+```ts
+const vestingsLength = await tmContract.vestingsLengths(member);
+```
+
+Then we get information on each vesting of the member:
+
+```ts
+const vestingInfo = await tmContract.getVesting(member, vestingId);
+```
+
+Then having all vestings for all members we calculate the total amount of non vested tokens at a specific time using the same code as in the [TokenManager.sol](https://github.com/aragon/aragon-apps/blob/6f581bf8ec43697c481f3692127f2ed0a2fba9de/apps/token-manager/contracts/TokenManager.sol#L358) contract.
+
+### stETH
+
+Circ supply for stETH equals stETH total supply
+
+```ts
+const totalSupply = await lidoContract.totalSupply();
+```
+
+### wstETH
+
+Circ supply for wstETH equals wstETH total supply
+
+```ts
+const totalSupply = await wstethContract.totalSupply();
+```
+
+## Data updating
+
+Data on all endpoints is updated once per minute.
+
+## Development
+
+Step 1. Copy the contents of `sample.env` to `.env`:
+
+```bash
+cp sample.env .env
+```
+
+Step 2. Install dependencies:
 
 ```bash
 $ yarn install
+```
+
+Step 3. Start the development server
+
+```bash
+$ yarn start:dev
 ```
 
 ## Running the app
@@ -34,6 +117,15 @@ $ yarn test:e2e
 
 # test coverage
 $ yarn test:cov
+```
+
+## Environment variables
+
+The following variables are required for the service to work:
+
+```
+CHAIN_ID=<chain id>
+EL_API_URLS=<rpc urls>
 ```
 
 ## License
