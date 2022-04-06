@@ -32,7 +32,10 @@ export class LdoVestingVestingsService {
   public async collectMembersVestings(
     updatedMembers: Set<string>,
     blockInfo: Block,
-  ) {
+  ): Promise<{
+    updatedVestings: Map<string, VestingInfo[]>;
+    allVestings: Map<string, VestingInfo[]>;
+  }> {
     this.logger.log('Collecting member vestings started', {
       membersLength: updatedMembers.size,
     });
@@ -61,7 +64,10 @@ export class LdoVestingVestingsService {
   /**
    * Returns all vestings for list of members
    */
-  protected async fetchMembersVestings(members: Set<string>, blockInfo: Block) {
+  protected async fetchMembersVestings(
+    members: Set<string>,
+    blockInfo: Block,
+  ): Promise<Map<string, VestingInfo[]>> {
     const fetchedVestings = new Map<string, VestingInfo[]>();
 
     await Promise.all(
@@ -79,7 +85,7 @@ export class LdoVestingVestingsService {
   }
 
   /**
-   * Returns all vestings for one member
+   * Fetches all vestings for one member
    */
   protected async fetchOneMemberVestings(
     member: string,
@@ -113,7 +119,7 @@ export class LdoVestingVestingsService {
   /**
    * Merges updated vestings with the saved list
    */
-  protected mergeVestings(updatedVestings: Map<string, VestingInfo[]>) {
+  protected mergeVestings(updatedVestings: Map<string, VestingInfo[]>): void {
     updatedVestings.forEach((memberVestings, memberAddress) =>
       this.membersVestings.set(memberAddress, memberVestings),
     );
@@ -122,7 +128,9 @@ export class LdoVestingVestingsService {
   /**
    * Calculates the length of the all vestings
    */
-  protected getVestingsLength(membersVestings: Map<string, VestingInfo[]>) {
+  protected getVestingsLength(
+    membersVestings: Map<string, VestingInfo[]>,
+  ): number {
     return [...membersVestings].reduce(
       (acc, [, vestings]) => acc + vestings.length,
       0,

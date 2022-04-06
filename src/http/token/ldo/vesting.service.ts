@@ -1,6 +1,7 @@
 import { Inject, Injectable, LoggerService } from '@nestjs/common';
 import { LOGGER_PROVIDER } from '@lido-nestjs/logger';
 import { Block } from '@ethersproject/abstract-provider';
+import { BigNumber } from '@ethersproject/bignumber';
 import { LdoBurnsService } from './ldo-burns.service';
 import { LdoVestingVestingsService } from './vesting-vestings.service';
 import { LdoVestingMembersService } from './vesting-members.service';
@@ -21,19 +22,18 @@ export class LdoVestingService {
   ) {}
 
   /**
-   * Calculate all locked LDO tokens in vesting
+   * Collects all locked LDO tokens in vesting
    */
-  public async collectLockedAmount(blockInfo: Block) {
+  public async collectLockedAmount(blockInfo: Block): Promise<BigNumber> {
     const [members, burns] = await Promise.all([
       this.membersService.collectMembersAddresses(blockInfo),
       this.burnsService.collectBurnsAddresses(blockInfo),
     ]);
 
+    const updatedMembers = members.updatedAddresses;
+
     const [vestings, balances] = await Promise.all([
-      this.vestingsService.collectMembersVestings(
-        members.updatedAddresses,
-        blockInfo,
-      ),
+      this.vestingsService.collectMembersVestings(updatedMembers, blockInfo),
       this.balanceService.fetchHoldersBalances(burns.allAddresses, blockInfo),
     ]);
 

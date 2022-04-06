@@ -8,9 +8,10 @@ const example = {
   blockHash:
     '0xfeed3e175e482268db83d4fd87a43c708f40983343f4b039e582c6f6a95e0e78',
   blockTimestamp: 1648797020000,
+  decimals: 18,
 };
 
-export class TokenCircSupplyV1 {
+export class TokenCircSupply {
   @ApiProperty({ example: example.totalSupply })
   totalSupply: string;
 
@@ -25,9 +26,13 @@ export class TokenCircSupplyV1 {
 
   @ApiProperty({ example: example.blockTimestamp })
   blockTimestamp: number;
+
+  @ApiProperty({ example: example.decimals })
+  decimals: number;
 }
 
-export interface TokenCircSupplyDataV1 {
+export interface TokenInfo {
+  decimals: number;
   totalSupply: BigNumber;
   circSupply: BigNumber;
 }

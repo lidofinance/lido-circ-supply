@@ -5,10 +5,10 @@ import {
   IsNumber,
   IsString,
   IsOptional,
-  validateSync,
-  Min,
   IsArray,
+  validateSync,
   ArrayMinSize,
+  Min,
 } from 'class-validator';
 import { Environment, LogLevel, LogFormat } from './interfaces';
 
@@ -73,6 +73,10 @@ export class EnvironmentVariables {
   @IsNumber()
   @Transform(({ value }) => Number(value))
   CHAIN_ID: number;
+
+  @IsOptional()
+  @IsString()
+  TOKEN_UPDATE_CRON = '*/1 * * * *';
 }
 
 export function validate(config: Record<string, unknown>) {

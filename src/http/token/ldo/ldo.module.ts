@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 
-import { LdoController } from './ldo.controller';
 import { LdoService } from './ldo.service';
 import { LdoBalanceService } from './ldo-balance.service';
 import { LdoBurnsService } from './ldo-burns.service';
@@ -11,7 +10,6 @@ import { LdoVestingService } from './vesting.service';
 import { LdoTreasuryService } from './treasury.service';
 
 @Module({
-  controllers: [LdoController],
   providers: [
     LdoService,
     LdoBalanceService,
@@ -22,5 +20,6 @@ import { LdoTreasuryService } from './treasury.service';
     LdoVestingVestingsService,
     LdoTreasuryService,
   ],
+  exports: [LdoService],
 })
 export class LdoModule {}

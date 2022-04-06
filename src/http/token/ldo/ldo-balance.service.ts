@@ -26,7 +26,7 @@ export class LdoBalanceService {
   public async fetchHoldersBalances(
     holdersAddresses: Set<string>,
     blockInfo: Block,
-  ) {
+  ): Promise<Map<string, BigNumber>> {
     const fetchedBalances = new Map<string, BigNumber>();
     const holdersLength = holdersAddresses.size;
 
@@ -45,9 +45,12 @@ export class LdoBalanceService {
   }
 
   /**
-   * Fetch a holder balance
+   * Fetches a holder balance
    */
-  public async fetchHolderBalance(holderAddress: string, blockInfo: Block) {
+  public async fetchHolderBalance(
+    holderAddress: string,
+    blockInfo: Block,
+  ): Promise<BigNumber> {
     // Collecting data by blockHash ensures that all data is from the same block
     const overrides = { blockTag: { blockHash: blockInfo.hash } } as any;
 

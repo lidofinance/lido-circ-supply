@@ -27,7 +27,10 @@ export class LdoBurnsService {
   /**
    * Collects addresses for which LDO tokens were burned
    */
-  public async collectBurnsAddresses(blockInfo: Block) {
+  public async collectBurnsAddresses(blockInfo: Block): Promise<{
+    updatedAddresses: Set<string>;
+    allAddresses: Set<string>;
+  }> {
     // Updates data with some blocks overlap to avoid possible reorganizations
     const fromBlockOffset = OVERLAPPING_REORG_OFFSET;
     const lastFetchedBlock = this.lastFetchedBlock ?? null;
@@ -72,7 +75,7 @@ export class LdoBurnsService {
   /**
    * Merges updated addresses with the saved list
    */
-  protected mergeAddresses(updatedAddresses: Set<string>) {
+  protected mergeAddresses(updatedAddresses: Set<string>): void {
     updatedAddresses.forEach((address) => this.burnsAddresses.add(address));
   }
 }

@@ -19,7 +19,7 @@ export class LdoVestingCalcsService {
     burns: Set<string>,
     balances: Map<string, BigNumber>,
     timestamp: number,
-  ) {
+  ): BigNumber {
     let totalLocked = BigNumber.from(0);
 
     vestings.forEach((memberVestings, memberAddress) => {
@@ -42,11 +42,6 @@ export class LdoVestingCalcsService {
           memberNotVested,
           memberBalance,
         );
-
-        this.logger.warn('Found the holder of the burned tokens', {
-          memberLockedTokens,
-          memberNotVested,
-        });
       }
 
       totalLocked = totalLocked.add(memberLockedTokens);
@@ -55,6 +50,9 @@ export class LdoVestingCalcsService {
     return totalLocked;
   }
 
+  /**
+   * Subtracts burned tokens from the total amount of locked tokens
+   */
   protected subtractBurnedTokens(
     nonVested: BigNumber,
     balance: BigNumber,

@@ -1,6 +1,6 @@
 # Lido Circ Supply
 
-Service returns circ supply for Lido tokens.
+Service returns circulating supply for Lido tokens.
 
 ## Endpoints
 
@@ -37,7 +37,7 @@ const revokeFilter = tmContract.filters.RevokeVesting();
 
 /**
  * Since we get updates only for new blocks while the server is running,
- * we also look at RevokeVesting events to make sure that programs will be
+ * we also look at RevokeVesting events to make sure that vestings will be
  * updated in the case of a vesting revoke
  */
 
@@ -46,13 +46,13 @@ const [newEvents, revokeEvents] = await Promise.all([
   tmContract.queryFilter(revokeFilter),
 ]);
 
-const updatedMembers = new Set<string>();
+const vestingMembers = new Set<string>();
 
-newEvents.forEach((event) => updatedMembers.add(event.args.receiver));
-revokeEvents.forEach((event) => updatedMembers.add(event.args.receiver));
+newEvents.forEach((event) => vestingMembers.add(event.args.receiver));
+revokeEvents.forEach((event) => vestingMembers.add(event.args.receiver));
 ```
 
-Then for each member we get the number of their vestings:
+Then for each updated member we get the number of their vestings:
 
 ```ts
 const vestingsLength = await tmContract.vestingsLengths(member);
@@ -64,7 +64,29 @@ Then we get information on each vesting of the member:
 const vestingInfo = await tmContract.getVesting(member, vestingId);
 ```
 
-Then having all vestings for all members we calculate the total amount of non vested tokens at a specific time using the same code as in the [TokenManager.sol](https://github.com/aragon/aragon-apps/blob/6f581bf8ec43697c481f3692127f2ed0a2fba9de/apps/token-manager/contracts/TokenManager.sol#L358) contract.
+At this step we have all the information to calculate the number of non vested tokens. But there may be more tokens in the vesting than on the member's balance, in case the tokens have been burned. That's why we collect all token burning events:
+
+```ts
+const filter = this.ldoContract.filters.Transfer(null, AddressZero);
+const events = await this.ldoContract.queryFilter(filter);
+
+const burnsAddresses = new Set<string>();
+events.forEach((event) => burnsAddresses.add(event.args._from));
+```
+
+For all addresses where tokens were burned, we update the member's balance:
+
+```ts
+const memberBalance = await ldoContract.balanceOf(holderAddress);
+```
+
+Then we calculate the amount of non vested tokens at a specific time using the same code as in the [TokenManager.sol](https://github.com/aragon/aragon-apps/blob/6f581bf8ec43697c481f3692127f2ed0a2fba9de/apps/token-manager/contracts/TokenManager.sol#L358) contract. For each member we check the calculated number of non vested tokens from all of his vestings against his LDO balance and use the minimum of these values:
+
+```ts
+const lockedTokens = balance.lt(nonVested) ? balance : nonVested;
+```
+
+Finally we sum up all locked tokens.
 
 ### stETH
 
@@ -81,6 +103,10 @@ Circ supply for wstETH equals wstETH total supply
 ```ts
 const totalSupply = await wstethContract.totalSupply();
 ```
+
+### stXXX
+
+TODO: add other chains support
 
 ## Data updating
 
