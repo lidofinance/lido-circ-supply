@@ -96,7 +96,7 @@ export abstract class TokenService implements OnModuleInit {
     );
 
     this.metricToken.set(
-      { token: this.contractName, field: 'timestamp' },
+      { token: this.contractName, field: 'update-timestamp' },
       this.supplyData.blockTimestamp,
     );
   }

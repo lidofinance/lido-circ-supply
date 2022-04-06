@@ -5,8 +5,7 @@ import {
 } from '@willsoto/nestjs-prometheus';
 import {
   METRIC_HTTP_REQUEST_DURATION,
-  METRIC_VESTING_DATA,
-  METRIC_TOKEN_SUPPLY_DATA,
+  METRIC_TOKEN_INFO,
   METRIC_EL_RPC_REQUEST_DURATION,
   METRIC_EL_RPC_REQUEST_ERRORS,
 } from './prometheus.constants';
@@ -18,15 +17,9 @@ export const PrometheusRequestsHistogramProvider = makeHistogramProvider({
   labelNames: ['statusCode', 'method', 'pathname'] as const,
 });
 
-export const PrometheusVestingGaugeProvider = makeGaugeProvider({
-  name: METRIC_VESTING_DATA,
-  help: 'Vesting data',
-  labelNames: ['token', 'field'] as const,
-});
-
-export const PrometheusTokenSupplyGaugeProvider = makeGaugeProvider({
-  name: METRIC_TOKEN_SUPPLY_DATA,
-  help: 'Token supply data',
+export const PrometheusTokenInfoGaugeProvider = makeGaugeProvider({
+  name: METRIC_TOKEN_INFO,
+  help: 'Token info data',
   labelNames: ['token', 'field'] as const,
 });
 
