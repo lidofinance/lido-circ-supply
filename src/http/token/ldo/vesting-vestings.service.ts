@@ -36,7 +36,7 @@ export class LdoVestingVestingsService {
     updatedVestings: Map<string, VestingInfo[]>;
     allVestings: Map<string, VestingInfo[]>;
   }> {
-    this.logger.log('Collecting member vestings started', {
+    this.logger.debug('Collecting member vestings started', {
       membersLength: updatedMembers.size,
     });
 
@@ -51,7 +51,7 @@ export class LdoVestingVestingsService {
     const updatedVestingsLength = this.getVestingsLength(updatedVestings);
     const allVestingsLength = this.getVestingsLength(allVestings);
 
-    this.logger.log('Vesting members fetched', {
+    this.logger.debug('Vesting members fetched', {
       updatedVestingsLength,
       allVestingsLength,
     });

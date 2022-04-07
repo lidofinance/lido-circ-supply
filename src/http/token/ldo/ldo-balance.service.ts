@@ -30,7 +30,7 @@ export class LdoBalanceService {
     const fetchedBalances = new Map<string, BigNumber>();
     const holdersLength = holdersAddresses.size;
 
-    this.logger.log('Fetches balances started', { holdersLength });
+    this.logger.debug('Fetches balances started', { holdersLength });
 
     await Promise.all(
       [...holdersAddresses].map(async (member) => {
@@ -39,7 +39,7 @@ export class LdoBalanceService {
       }),
     );
 
-    this.logger.log('Holders balances fetched', { holdersLength });
+    this.logger.debug('Holders balances fetched', { holdersLength });
 
     return fetchedBalances;
   }

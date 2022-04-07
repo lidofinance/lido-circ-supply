@@ -2,6 +2,7 @@ import { CronJob } from 'cron';
 import { Gauge } from 'prom-client';
 import { Inject, LoggerService, OnModuleInit } from '@nestjs/common';
 import { Block } from '@ethersproject/abstract-provider';
+import { formatUnits } from '@ethersproject/units';
 import { BigNumber } from '@ethersproject/bignumber';
 import { InjectMetric } from '@willsoto/nestjs-prometheus';
 import { SimpleFallbackJsonRpcBatchProvider } from '@lido-nestjs/execution';
@@ -11,7 +12,6 @@ import { SchedulerRegistry } from '@nestjs/schedule';
 import { METRIC_TOKEN_INFO } from 'common/prometheus';
 import { ConfigService } from 'common/config';
 import { OneAtTime } from 'common/decorators';
-import { getDecimalPart, getIntegerPart } from 'utils';
 import { TokenCircSupply, TokenInfo } from './token.entity';
 
 import { LdoService } from './ldo';
@@ -101,12 +101,7 @@ export class TokenService implements OnModuleInit {
     const tokenData = this.tokensData.get(tokenName);
     const circSupply = BigNumber.from(tokenData.circSupply);
 
-    const { decimals } = tokenData;
-
-    const digitalPart = getIntegerPart(circSupply, decimals).toString();
-    const decimalPart = getDecimalPart(circSupply, decimals).toString();
-
-    return `${digitalPart}.${decimalPart}`;
+    return formatUnits(circSupply, tokenData.decimals);
   }
 
   /**
@@ -133,7 +128,7 @@ export class TokenService implements OnModuleInit {
     this.tokensData.set(tokenName, tokenData);
     this.updateMetrics(tokenName, tokenData);
 
-    this.logger.log('Token data updated', { tokenName, tokenInfo });
+    this.logger.debug('Token data updated', { tokenName, tokenInfo });
   }
 
   /**
@@ -145,12 +140,12 @@ export class TokenService implements OnModuleInit {
 
     this.metric.set(
       { token, field: 'total-supply' },
-      getIntegerPart(totalSupply, data.decimals).toNumber(),
+      Number(formatUnits(totalSupply, data.decimals)),
     );
 
     this.metric.set(
       { token, field: 'circ-supply' },
-      getIntegerPart(circSupply, data.decimals).toNumber(),
+      Number(formatUnits(circSupply, data.decimals)),
     );
 
     this.metric.set({ token, field: 'update-timestamp' }, data.blockTimestamp);

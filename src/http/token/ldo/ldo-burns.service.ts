@@ -40,7 +40,7 @@ export class LdoBurnsService {
 
     const filter = this.ldoContract.filters.Transfer(null, AddressZero);
 
-    this.logger.log('Collecting token burns started', {
+    this.logger.debug('Collecting token burns started', {
       fromBlock,
       toBlock,
     });
@@ -60,7 +60,7 @@ export class LdoBurnsService {
     this.mergeAddresses(updatedAddresses);
     const allAddresses = this.burnsAddresses;
 
-    this.logger.log('Token burns fetched', {
+    this.logger.debug('Token burns fetched', {
       updatedAddressesLength: updatedAddresses.size,
       allAddressesLength: allAddresses.size,
       fromBlock,
