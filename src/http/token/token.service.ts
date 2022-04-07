@@ -128,7 +128,7 @@ export class TokenService implements OnModuleInit {
     this.tokensData.set(tokenName, tokenData);
     this.updateMetrics(tokenName, tokenData);
 
-    this.logger.log('Token data updated', { tokenName, tokenInfo });
+    this.logger.debug('Token data updated', { tokenName, tokenInfo });
   }
 
   /**

@@ -43,7 +43,7 @@ export class LdoVestingMembersService {
     const newFilter = this.tmContract.filters.NewVesting();
     const revokeFilter = this.tmContract.filters.RevokeVesting();
 
-    this.logger.log('Collecting vesting members started', {
+    this.logger.debug('Collecting vesting members started', {
       fromBlock,
       toBlock,
     });
@@ -64,7 +64,7 @@ export class LdoVestingMembersService {
     this.mergeAddresses(updatedAddresses);
     const allAddresses = this.membersAddresses;
 
-    this.logger.log('Vesting members fetched', {
+    this.logger.debug('Vesting members fetched', {
       updatedAddressesLength: updatedAddresses.size,
       allAddressesLength: allAddresses.size,
       fromBlock,
