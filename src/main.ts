@@ -9,8 +9,7 @@ import {
 import { LOGGER_PROVIDER } from '@lido-nestjs/logger';
 import { SWAGGER_URL } from 'http/common/swagger';
 import { ConfigService } from 'common/config';
-import { AppModule } from 'app.module';
-import { APP_DESCRIPTION, APP_NAME, APP_VERSION } from 'app.constants';
+import { AppModule, APP_DESCRIPTION, APP_NAME, APP_VERSION } from 'app';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(

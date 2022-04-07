@@ -5,6 +5,7 @@ import {
 } from '@willsoto/nestjs-prometheus';
 import {
   METRIC_HTTP_REQUEST_DURATION,
+  METRIC_BUILD_INFO,
   METRIC_TOKEN_INFO,
   METRIC_EL_RPC_REQUEST_DURATION,
   METRIC_EL_RPC_REQUEST_ERRORS,
@@ -15,6 +16,12 @@ export const PrometheusRequestsHistogramProvider = makeHistogramProvider({
   help: 'Duration of http requests',
   buckets: [0.01, 0.1, 0.2, 0.5, 1, 1.5, 2, 5],
   labelNames: ['statusCode', 'method', 'pathname'] as const,
+});
+
+export const PrometheusBuildInfoGaugeProvider = makeCounterProvider({
+  name: METRIC_BUILD_INFO,
+  help: 'Build information',
+  labelNames: ['name', 'version', 'env', 'network'] as const,
 });
 
 export const PrometheusTokenInfoGaugeProvider = makeGaugeProvider({
