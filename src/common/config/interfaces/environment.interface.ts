@@ -1,7 +1,8 @@
 export enum Environment {
   development = 'development',
   production = 'production',
-  test = 'test',
+  staging = 'staging',
+  testnet = 'testnet',
 }
 
 export enum LogLevel {
