@@ -49,7 +49,7 @@ export class LdoVestingMembersService {
     });
 
     // TODO:
-    // There will be an error when over 1000 events
+    // There will be an error when over 10000 events
     // Need to receive events in chunks
     const [newEvents, revokeEvents] = await Promise.all([
       this.tmContract.queryFilter(newFilter, fromBlock, toBlock),
