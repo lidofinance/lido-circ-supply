@@ -6,7 +6,7 @@ export class ConfigService extends ConfigServiceSource<EnvironmentVariables> {
    * List of env variables that should be hidden
    */
   public get secrets(): string[] {
-    return [this.get('EL_API_URLS'), this.get('SENTRY_DSN') ?? '']
+    return [...this.get('EL_API_URLS'), this.get('SENTRY_DSN') ?? '']
       .filter((v) => v)
       .map((v) => String(v));
   }

@@ -1,6 +1,7 @@
 import { PrometheusModule as PrometheusModuleSource } from '@willsoto/nestjs-prometheus';
 import {
   PrometheusRequestsHistogramProvider,
+  PrometheusBuildInfoGaugeProvider,
   PrometheusTokenInfoGaugeProvider,
   PrometheusELRPCRequestsHistogramProvider,
   PrometheusELRPCErrorsCounterProvider,
@@ -19,6 +20,7 @@ export const PrometheusModule = PrometheusModuleSource.register({
 
 const providers = [
   PrometheusRequestsHistogramProvider,
+  PrometheusBuildInfoGaugeProvider,
   PrometheusTokenInfoGaugeProvider,
   PrometheusELRPCRequestsHistogramProvider,
   PrometheusELRPCErrorsCounterProvider,
