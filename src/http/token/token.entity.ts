@@ -21,7 +21,7 @@ export class TokenCircSupply {
   @ApiProperty({ example: example.blockNumber })
   blockNumber: number;
 
-  @ApiProperty({ example: example.blockTimestamp })
+  @ApiProperty({ example: example.blockHash })
   blockHash: string;
 
   @ApiProperty({ example: example.blockTimestamp })
