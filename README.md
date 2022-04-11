@@ -4,7 +4,12 @@ Service returns circulating supply for Lido tokens.
 
 ## Endpoints
 
-After the server starts, Swagger will be available at `/api`.
+API service is deployed in the mainnet and testnet chains. A list of available endpoints can be found in the Swagger:
+
+- Mainnet: https://circ-supply.lido.fi/api/static/index.html
+- Goerli: https://circ-supply.testnet.fi/api/static/index.html
+
+## Circ supply calculations
 
 ### LDO
 
@@ -94,6 +99,7 @@ Circ supply for stETH equals stETH total supply
 
 ```ts
 const totalSupply = await lidoContract.totalSupply();
+const circSupply = totalSupply;
 ```
 
 ### wstETH
@@ -102,6 +108,7 @@ Circ supply for wstETH equals wstETH total supply
 
 ```ts
 const totalSupply = await wstethContract.totalSupply();
+const circSupply = totalSupply;
 ```
 
 ### stXXX
@@ -110,14 +117,14 @@ TODO: add other chains support
 
 ## Data updating
 
-Data on all endpoints is updated once per minute.
+The data for all endpoints is updated by the cron job. The update interval is set via env variable `TOKEN_UPDATE_CRON`, which defaults `*/1 * * * *`.
 
 ## Development
 
 Step 1. Copy the contents of `sample.env` to `.env`:
 
 ```bash
-cp sample.env .env
+$ cp sample.env .env
 ```
 
 Step 2. Install dependencies:
@@ -160,12 +167,21 @@ $ yarn test:cov
 
 ## Environment variables
 
-The following variables are required for the service to work:
+| Variable              | Required | Default       | Description                                                  |
+| --------------------- | -------- | :------------ | :----------------------------------------------------------- |
+| EL_API_URLS           | Yes      |               | Execution layer RPC urls, separated by comma                 |
+| CHAIN_ID              | Yes      |               | Execution layer chain id                                     |
+| PORT                  | No       | `3000`        | App port                                                     |
+| CORS_WHITELIST_REGEXP | No       |               | Regexp that checks which domains have access                 |
+| GLOBAL_THROTTLE_TTL   | No       | `5`           | The number of seconds that each request will last in storage |
+| GLOBAL_THROTTLE_LIMIT | No       | `100`         | The maximum number of requests within the TTL limit          |
+| GLOBAL_CACHE_TTL      | No       | `1`           | Cache expiration time in seconds                             |
+| SENTRY_DSN            | No       |               | Sentry DSN                                                   |
+| LOG_LEVEL             | No       | `json`        | Log level: debug, info, notice, warning or error             |
+| LOG_FORMAT            | No       | `debug`       | Log format: simple or json                                   |
+| TOKEN_UPDATE_CRON     | No       | `*/1 * * * *` | Token update cron job interval                               |
 
-```
-CHAIN_ID=<chain id>
-EL_API_URLS=<rpc urls>
-```
+The `sample.env` file contains examples of variable values.
 
 ## License
 
