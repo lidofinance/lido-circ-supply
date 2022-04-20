@@ -1,26 +1,20 @@
-import { Gauge } from 'prom-client';
-import { InjectMetric } from '@willsoto/nestjs-prometheus';
 import { Inject, Injectable, LoggerService } from '@nestjs/common';
 import {
-  ARAGON_TOKEN_MANAGER_CONTRACT_TOKEN,
-  AragonTokenManager,
+  ARAGON_TOKEN_MANAGER_CONTRACT_TOKEN as CONTRACT_TOKEN,
+  AragonTokenManager as TokenManager,
 } from '@lido-nestjs/contracts';
 import { LOGGER_PROVIDER } from '@lido-nestjs/logger';
 import { Block } from '@ethersproject/abstract-provider';
-import { METRIC_TOKEN_INFO } from 'common/prometheus';
+import { PrometheusService } from 'common/prometheus';
 import { OVERLAPPING_REORG_OFFSET } from './ldo.constants';
 
 @Injectable()
 export class LdoVestingMembersService {
   constructor(
-    @Inject(LOGGER_PROVIDER)
-    protected readonly logger: LoggerService,
+    @Inject(LOGGER_PROVIDER) protected readonly logger: LoggerService,
+    @Inject(CONTRACT_TOKEN) protected readonly tmContract: TokenManager,
 
-    @Inject(ARAGON_TOKEN_MANAGER_CONTRACT_TOKEN)
-    protected readonly tmContract: AragonTokenManager,
-
-    @InjectMetric(METRIC_TOKEN_INFO)
-    protected readonly metric: Gauge<string>,
+    protected readonly prometheusService: PrometheusService,
   ) {}
 
   protected membersAddresses = new Set<string>();
@@ -71,7 +65,7 @@ export class LdoVestingMembersService {
       toBlock,
     });
 
-    this.metric.set(
+    this.prometheusService.tokenInfo.set(
       { token: 'ldo', field: 'vesting-members' },
       allAddresses.size,
     );

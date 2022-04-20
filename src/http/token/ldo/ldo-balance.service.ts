@@ -1,23 +1,14 @@
-import { Gauge } from 'prom-client';
-import { InjectMetric } from '@willsoto/nestjs-prometheus';
 import { Inject, Injectable, LoggerService } from '@nestjs/common';
 import { LDO_CONTRACT_TOKEN, Ldo } from '@lido-nestjs/contracts';
 import { LOGGER_PROVIDER } from '@lido-nestjs/logger';
 import { Block } from '@ethersproject/abstract-provider';
 import { BigNumber } from '@ethersproject/bignumber';
-import { METRIC_TOKEN_INFO } from 'common/prometheus';
 
 @Injectable()
 export class LdoBalanceService {
   constructor(
-    @Inject(LOGGER_PROVIDER)
-    protected readonly logger: LoggerService,
-
-    @Inject(LDO_CONTRACT_TOKEN)
-    protected readonly ldoContract: Ldo,
-
-    @InjectMetric(METRIC_TOKEN_INFO)
-    protected readonly metric: Gauge<string>,
+    @Inject(LOGGER_PROVIDER) protected readonly logger: LoggerService,
+    @Inject(LDO_CONTRACT_TOKEN) protected readonly ldoContract: Ldo,
   ) {}
 
   /**

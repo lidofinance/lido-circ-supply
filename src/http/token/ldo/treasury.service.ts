@@ -12,14 +12,9 @@ import { BigNumber } from '@ethersproject/bignumber';
 @Injectable()
 export class LdoTreasuryService {
   constructor(
-    @Inject(LOGGER_PROVIDER)
-    protected readonly logger: LoggerService,
-
-    @Inject(LDO_CONTRACT_TOKEN)
-    protected readonly ldoContract: Ldo,
-
-    @Inject(LIDO_CONTRACT_TOKEN)
-    protected readonly lidoContract: Lido,
+    @Inject(LOGGER_PROVIDER) protected readonly logger: LoggerService,
+    @Inject(LDO_CONTRACT_TOKEN) protected readonly ldoContract: Ldo,
+    @Inject(LIDO_CONTRACT_TOKEN) protected readonly lidoContract: Lido,
   ) {}
 
   /**
