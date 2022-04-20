@@ -1,16 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { WSTETH_CONTRACT_TOKEN, Wsteth } from '@lido-nestjs/contracts';
+import { LIDO_CONTRACT_TOKEN, Lido } from '@lido-nestjs/contracts';
 import { Block } from '@ethersproject/abstract-provider';
-import { TokenInfo } from '../token.entity';
-import { TokenService } from '../interfaces';
+import { TokenService, TokenInfo } from '../interfaces';
 
 @Injectable()
-export class WstethService implements TokenService {
+export class StethService implements TokenService {
   constructor(
-    @Inject(WSTETH_CONTRACT_TOKEN) protected readonly wstethContract: Wsteth,
+    @Inject(LIDO_CONTRACT_TOKEN) protected readonly lidoContract: Lido,
   ) {}
 
-  public tokenName = 'wsteth';
+  public tokenName = 'steth';
 
   /**
    * Returns the token info for the given block
@@ -20,8 +19,8 @@ export class WstethService implements TokenService {
     const overrides = { blockTag: { blockHash: blockInfo.hash } } as any;
 
     const [totalSupply, decimals] = await Promise.all([
-      this.wstethContract.totalSupply(overrides),
-      this.wstethContract.decimals(overrides),
+      this.lidoContract.totalSupply(overrides),
+      this.lidoContract.decimals(overrides),
     ]);
 
     const circSupply = totalSupply;

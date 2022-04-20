@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BigNumber } from '@ethersproject/bignumber';
 
 const example = {
   totalSupply: '0x0de0b6b3a7640000',
@@ -11,7 +10,7 @@ const example = {
   decimals: 18,
 };
 
-export class TokenCircSupply {
+export class SupplyEntity {
   @ApiProperty({ example: example.totalSupply })
   totalSupply: string;
 
@@ -29,10 +28,4 @@ export class TokenCircSupply {
 
   @ApiProperty({ example: example.decimals })
   decimals: number;
-}
-
-export interface TokenInfo {
-  decimals: number;
-  totalSupply: BigNumber;
-  circSupply: BigNumber;
 }

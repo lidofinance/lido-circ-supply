@@ -3,8 +3,7 @@ import { LDO_CONTRACT_TOKEN, Ldo } from '@lido-nestjs/contracts';
 import { Block } from '@ethersproject/abstract-provider';
 import { LdoVestingService } from './vesting.service';
 import { LdoTreasuryService } from './treasury.service';
-import { TokenInfo } from '../token.entity';
-import { TokenService } from '../interfaces';
+import { TokenService, TokenInfo } from '../interfaces';
 
 @Injectable()
 export class LdoService implements TokenService {

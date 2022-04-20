@@ -17,6 +17,7 @@ import { LoggerModule } from 'common/logger';
 import { ProviderModule } from 'common/provider';
 import { AppService } from './app.service';
 import { HTTPModule } from '../http';
+import { WorkerModule } from 'worker';
 
 const contractOptions = {
   async useFactory(provider: SimpleFallbackJsonRpcBatchProvider) {
@@ -38,6 +39,7 @@ const contractOptions = {
     LidoContractModule.forRootAsync(contractOptions),
     WstethContractModule.forRootAsync(contractOptions),
     AragonTokenManagerContractModule.forRootAsync(contractOptions),
+    WorkerModule,
   ],
   providers: [
     { provide: APP_INTERCEPTOR, useClass: SentryInterceptor },

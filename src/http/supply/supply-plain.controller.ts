@@ -1,11 +1,11 @@
 import { Controller, Get, Header, Version } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { TokenService } from './token.service';
+import { TokensService } from 'tokens';
 
 @Controller('plain')
 @ApiTags('Plain Supply Data With Decimals')
-export class TokenPlainController {
-  constructor(private readonly tokenService: TokenService) {}
+export class SupplyPlainController {
+  constructor(private readonly tokensService: TokensService) {}
 
   @Version('1')
   @Get('ldo')
@@ -15,7 +15,7 @@ export class TokenPlainController {
     description: 'Returns LDO supply information',
   })
   ldoCircSupplyV1(): string {
-    return this.tokenService.getTokenPlainCircSupply('ldo');
+    return this.tokensService.getTokenPlainCircSupply('ldo');
   }
 
   @Version('1')
@@ -26,7 +26,7 @@ export class TokenPlainController {
     description: 'Returns stETH supply information',
   })
   stethCircSupplyV1(): string {
-    return this.tokenService.getTokenPlainCircSupply('steth');
+    return this.tokensService.getTokenPlainCircSupply('steth');
   }
 
   @Version('1')
@@ -37,6 +37,6 @@ export class TokenPlainController {
     description: 'Returns wstETH supply information',
   })
   wstethCircSupplyV1(): string {
-    return this.tokenService.getTokenPlainCircSupply('wsteth');
+    return this.tokensService.getTokenPlainCircSupply('wsteth');
   }
 }
