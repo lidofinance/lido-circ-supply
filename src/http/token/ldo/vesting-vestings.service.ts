@@ -1,27 +1,21 @@
-import { Gauge } from 'prom-client';
-import { InjectMetric } from '@willsoto/nestjs-prometheus';
 import { Inject, Injectable, LoggerService } from '@nestjs/common';
 import {
-  ARAGON_TOKEN_MANAGER_CONTRACT_TOKEN,
-  AragonTokenManager,
+  ARAGON_TOKEN_MANAGER_CONTRACT_TOKEN as CONTRACT_TOKEN,
+  AragonTokenManager as TokenManager,
 } from '@lido-nestjs/contracts';
 import { range } from '@lido-nestjs/utils';
 import { LOGGER_PROVIDER } from '@lido-nestjs/logger';
 import { Block } from '@ethersproject/abstract-provider';
-import { METRIC_TOKEN_INFO } from 'common/prometheus';
+import { PrometheusService } from 'common/prometheus';
 import { VestingInfo } from './interfaces';
 
 @Injectable()
 export class LdoVestingVestingsService {
   constructor(
-    @Inject(LOGGER_PROVIDER)
-    protected readonly logger: LoggerService,
+    @Inject(LOGGER_PROVIDER) protected readonly logger: LoggerService,
+    @Inject(CONTRACT_TOKEN) protected readonly tmContract: TokenManager,
 
-    @Inject(ARAGON_TOKEN_MANAGER_CONTRACT_TOKEN)
-    protected readonly tmContract: AragonTokenManager,
-
-    @InjectMetric(METRIC_TOKEN_INFO)
-    protected readonly metric: Gauge<string>,
+    protected readonly prometheusService: PrometheusService,
   ) {}
 
   protected membersVestings = new Map<string, VestingInfo[]>();
@@ -56,7 +50,10 @@ export class LdoVestingVestingsService {
       allVestingsLength,
     });
 
-    this.metric.set({ token: 'ldo', field: 'vestings' }, allVestings.size);
+    this.prometheusService.tokenInfo.set(
+      { token: 'ldo', field: 'vestings' },
+      allVestings.size,
+    );
 
     return { updatedVestings, allVestings };
   }

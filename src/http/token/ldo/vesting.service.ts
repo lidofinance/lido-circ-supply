@@ -11,8 +11,7 @@ import { LdoVestingCalcsService } from './vesting-calcs.service';
 @Injectable()
 export class LdoVestingService {
   constructor(
-    @Inject(LOGGER_PROVIDER)
-    protected readonly logger: LoggerService,
+    @Inject(LOGGER_PROVIDER) protected readonly logger: LoggerService,
 
     protected readonly calcsService: LdoVestingCalcsService,
     protected readonly membersService: LdoVestingMembersService,

@@ -9,8 +9,7 @@ import { TokenService } from '../interfaces';
 @Injectable()
 export class LdoService implements TokenService {
   constructor(
-    @Inject(LDO_CONTRACT_TOKEN)
-    protected readonly ldoContract: Ldo,
+    @Inject(LDO_CONTRACT_TOKEN) protected readonly ldoContract: Ldo,
 
     protected readonly vestingService: LdoVestingService,
     protected readonly treasuryService: LdoTreasuryService,

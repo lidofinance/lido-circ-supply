@@ -1,24 +1,18 @@
-import { Gauge } from 'prom-client';
-import { InjectMetric } from '@willsoto/nestjs-prometheus';
 import { Inject, Injectable, LoggerService } from '@nestjs/common';
 import { LDO_CONTRACT_TOKEN, Ldo } from '@lido-nestjs/contracts';
 import { LOGGER_PROVIDER } from '@lido-nestjs/logger';
 import { Block } from '@ethersproject/abstract-provider';
 import { AddressZero } from '@ethersproject/constants';
-import { METRIC_TOKEN_INFO } from 'common/prometheus';
+import { PrometheusService } from 'common/prometheus';
 import { OVERLAPPING_REORG_OFFSET } from './ldo.constants';
 
 @Injectable()
 export class LdoBurnsService {
   constructor(
-    @Inject(LOGGER_PROVIDER)
-    protected readonly logger: LoggerService,
+    @Inject(LOGGER_PROVIDER) protected readonly logger: LoggerService,
+    @Inject(LDO_CONTRACT_TOKEN) protected readonly ldoContract: Ldo,
 
-    @Inject(LDO_CONTRACT_TOKEN)
-    protected readonly ldoContract: Ldo,
-
-    @InjectMetric(METRIC_TOKEN_INFO)
-    protected readonly metric: Gauge<string>,
+    protected readonly prometheusService: PrometheusService,
   ) {}
 
   protected burnsAddresses = new Set<string>();
@@ -67,7 +61,10 @@ export class LdoBurnsService {
       toBlock,
     });
 
-    this.metric.set({ token: 'ldo', field: 'burns' }, allAddresses.size);
+    this.prometheusService.tokenInfo.set(
+      { token: 'ldo', field: 'burns' },
+      allAddresses.size,
+    );
 
     return { updatedAddresses, allAddresses };
   }

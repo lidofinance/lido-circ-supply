@@ -1,15 +1,13 @@
 import { CronJob } from 'cron';
-import { Gauge } from 'prom-client';
 import { Inject, LoggerService, OnModuleInit } from '@nestjs/common';
 import { Block } from '@ethersproject/abstract-provider';
 import { formatUnits } from '@ethersproject/units';
 import { BigNumber } from '@ethersproject/bignumber';
-import { InjectMetric } from '@willsoto/nestjs-prometheus';
 import { SimpleFallbackJsonRpcBatchProvider } from '@lido-nestjs/execution';
 import { LOGGER_PROVIDER } from '@lido-nestjs/logger';
 import { SchedulerRegistry } from '@nestjs/schedule';
 
-import { METRIC_TOKEN_INFO } from 'common/prometheus';
+import { PrometheusService } from 'common/prometheus';
 import { ConfigService } from 'common/config';
 import { OneAtTime } from 'common/decorators';
 import { TokenCircSupply, TokenInfo } from './token.entity';
@@ -21,7 +19,6 @@ import { WstethService } from './wsteth';
 export class TokenService implements OnModuleInit {
   constructor(
     @Inject(LOGGER_PROVIDER) protected readonly logger: LoggerService,
-    @InjectMetric(METRIC_TOKEN_INFO) protected readonly metric: Gauge<string>,
 
     protected readonly provider: SimpleFallbackJsonRpcBatchProvider,
     protected readonly configService: ConfigService,
@@ -30,6 +27,7 @@ export class TokenService implements OnModuleInit {
     protected readonly ldoService: LdoService,
     protected readonly stethService: StethService,
     protected readonly wstethService: WstethService,
+    protected readonly prometheusService: PrometheusService,
   ) {}
 
   protected tokensServices = [
@@ -138,17 +136,20 @@ export class TokenService implements OnModuleInit {
     const totalSupply = BigNumber.from(data.totalSupply);
     const circSupply = BigNumber.from(data.circSupply);
 
-    this.metric.set(
+    this.prometheusService.tokenInfo.set(
       { token, field: 'total-supply' },
       Number(formatUnits(totalSupply, data.decimals)),
     );
 
-    this.metric.set(
+    this.prometheusService.tokenInfo.set(
       { token, field: 'circ-supply' },
       Number(formatUnits(circSupply, data.decimals)),
     );
 
-    this.metric.set({ token, field: 'update-timestamp' }, data.blockTimestamp);
+    this.prometheusService.tokenInfo.set(
+      { token, field: 'update-timestamp' },
+      data.blockTimestamp,
+    );
   }
 
   /**

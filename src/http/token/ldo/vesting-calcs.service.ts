@@ -7,8 +7,7 @@ import { VestingInfo } from './interfaces';
 @Injectable()
 export class LdoVestingCalcsService {
   constructor(
-    @Inject(LOGGER_PROVIDER)
-    protected readonly logger: LoggerService,
+    @Inject(LOGGER_PROVIDER) protected readonly logger: LoggerService,
   ) {}
 
   /**

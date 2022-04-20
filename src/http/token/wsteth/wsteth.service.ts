@@ -7,8 +7,7 @@ import { TokenService } from '../interfaces';
 @Injectable()
 export class WstethService implements TokenService {
   constructor(
-    @Inject(WSTETH_CONTRACT_TOKEN)
-    protected readonly wstethContract: Wsteth,
+    @Inject(WSTETH_CONTRACT_TOKEN) protected readonly wstethContract: Wsteth,
   ) {}
 
   public tokenName = 'wsteth';

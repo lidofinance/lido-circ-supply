@@ -7,8 +7,7 @@ import { TokenService } from '../interfaces';
 @Injectable()
 export class StethService implements TokenService {
   constructor(
-    @Inject(LIDO_CONTRACT_TOKEN)
-    protected readonly lidoContract: Lido,
+    @Inject(LIDO_CONTRACT_TOKEN) protected readonly lidoContract: Lido,
   ) {}
 
   public tokenName = 'steth';
