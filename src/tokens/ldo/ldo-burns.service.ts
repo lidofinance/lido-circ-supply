@@ -52,6 +52,7 @@ export class LdoBurnsService {
     events.forEach((event) => updatedAddresses.add(event.args._from));
 
     this.mergeAddresses(updatedAddresses);
+    this.lastFetchedBlock = toBlock;
     const allAddresses = this.burnsAddresses;
 
     this.logger.debug('Token burns fetched', {

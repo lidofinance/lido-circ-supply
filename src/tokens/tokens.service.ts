@@ -56,7 +56,7 @@ export class TokensService {
     this.storageService.set(tokenName, tokenData);
     this.updateMetrics(tokenName, tokenData);
 
-    this.logger.debug('Token data updated', { tokenName, tokenInfo });
+    this.logger.debug('Token data updated', { tokenName, tokenData });
   }
 
   /**

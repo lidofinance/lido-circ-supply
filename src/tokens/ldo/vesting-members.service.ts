@@ -34,6 +34,11 @@ export class LdoVestingMembersService {
     const fromBlock = lastFetchedBlock ? lastFetchedBlock - fromBlockOffset : 0;
     const toBlock = blockInfo.number;
 
+    /**
+     * Since we get updates only for new blocks while the server is running,
+     * we also look at RevokeVesting events to make sure that vestings will be
+     * updated in the case of a vesting revoke
+     */
     const newFilter = this.tmContract.filters.NewVesting();
     const revokeFilter = this.tmContract.filters.RevokeVesting();
 
@@ -56,6 +61,7 @@ export class LdoVestingMembersService {
     revokeEvents.forEach((event) => updatedAddresses.add(event.args.receiver));
 
     this.mergeAddresses(updatedAddresses);
+    this.lastFetchedBlock = toBlock;
     const allAddresses = this.membersAddresses;
 
     this.logger.debug('Vesting members fetched', {
