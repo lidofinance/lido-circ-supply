@@ -1,3 +1,13 @@
+## [0.2.1](https://github.com/lidofinance/lido-circ-supply/compare/0.2.0...0.2.1) (2022-04-21)
+
+
+### Bug Fixes
+
+* bump lido modules ([d10d1e3](https://github.com/lidofinance/lido-circ-supply/commit/d10d1e3f3d0b505d5689d201b1abbd83232bbde8))
+* save latest block ([47e6100](https://github.com/lidofinance/lido-circ-supply/commit/47e6100065239f30fe275f3546fc73288ff7607d))
+
+
+
 # [0.2.0](https://github.com/lidofinance/lido-circ-supply/compare/0.1.0...0.2.0) (2022-04-09)
 
 
