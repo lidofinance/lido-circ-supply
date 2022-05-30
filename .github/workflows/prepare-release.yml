@@ -20,5 +20,5 @@ jobs:
         uses: lidofinance/create-pull-request@v4
         with:
           branch: pre-release-${{ steps.changelog.outputs.version }}
-          title: "Release ${{ steps.changelog.outputs.version }}"
+          title: 'Release ${{ steps.changelog.outputs.version }}'
           body: "This PR is generated automatically. Merge it with **Rebase and merge** option (option is CRUCIAL) for the automatic tag creation.\nIf you don't need this PR than close it and **delete source branch**! "
