@@ -5,7 +5,7 @@ import { TokensService } from 'tokens';
 @Controller('plain')
 @ApiTags('Plain Supply Data With Decimals')
 export class SupplyPlainController {
-  constructor(private readonly tokensService: TokensService) {}
+  constructor(protected readonly tokensService: TokensService) {}
 
   @Version('1')
   @Get('ldo')

@@ -10,7 +10,7 @@ import { Request, Reply } from './interfaces';
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
   constructor(
-    @Inject(LOGGER_PROVIDER) private readonly logger: LoggerService,
+    @Inject(LOGGER_PROVIDER) protected readonly logger: LoggerService,
   ) {}
 
   use(request: Request, reply: Reply, next: () => void) {

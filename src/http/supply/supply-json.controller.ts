@@ -6,7 +6,7 @@ import { TokensService } from 'tokens';
 @Controller('detailed')
 @ApiTags('Detailed Supply Data')
 export class SupplyJsonController {
-  constructor(private readonly tokensService: TokensService) {}
+  constructor(protected readonly tokensService: TokensService) {}
 
   @Version('1')
   @Get('ldo')
