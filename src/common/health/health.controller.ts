@@ -11,8 +11,8 @@ import { HEALTH_URL } from './health.constants';
 @ApiExcludeController()
 export class HealthController {
   constructor(
-    private health: HealthCheckService,
-    private memory: MemoryHealthIndicator,
+    protected health: HealthCheckService,
+    protected memory: MemoryHealthIndicator,
   ) {}
 
   @Get()
@@ -20,7 +20,6 @@ export class HealthController {
   check() {
     return this.health.check([
       async () => this.memory.checkHeap('memoryHeap', 1024 * 1024 * 1024),
-      // TODO: check data available
     ]);
   }
 }
