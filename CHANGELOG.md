@@ -1,10 +1,12 @@
-# [0.3.0](https://github.com/lidofinance/lido-circ-supply/compare/0.2.1...0.3.0) (2022-05-30)
+# [0.4.0](https://github.com/lidofinance/lido-circ-supply/compare/0.2.1...0.4.0) (2022-11-30)
 
 
 ### Bug Fixes
 
+* metric query labels ([2130b4e](https://github.com/lidofinance/lido-circ-supply/commit/2130b4ef8847c90f74978e3d60f5edcb3aa1f0f8))
 * Release flow for the last time ([f8f4e61](https://github.com/lidofinance/lido-circ-supply/commit/f8f4e6156c719784b749eab03a93597c9cd30f54))
 * Release flow secrets passing ([52471ad](https://github.com/lidofinance/lido-circ-supply/commit/52471adbe0bacf754ea18cd7ec99f9d72c9bd421))
+* Release wf updates ([#14](https://github.com/lidofinance/lido-circ-supply/issues/14)) ([cfee172](https://github.com/lidofinance/lido-circ-supply/commit/cfee172032129030dfd14962c50abfc5af17de0a))
 * Update flow ([7a19f44](https://github.com/lidofinance/lido-circ-supply/commit/7a19f44fdb2b6f9605622018132cb1bf65d17bad))
 
 
