@@ -26,6 +26,16 @@ export class TokensService {
   }
 
   /**
+   * Gets token total supply from the storage
+   */
+  public getTokenPlainTotalSupply(tokenName: string): string {
+    const tokenData = this.storageService.get(tokenName);
+    const totalSupply = BigNumber.from(tokenData.totalSupply);
+
+    return formatUnits(totalSupply, tokenData.decimals);
+  }
+
+  /**
    * Gets token info from the storage
    */
   public getTokenData(tokenName: string): TokenData {

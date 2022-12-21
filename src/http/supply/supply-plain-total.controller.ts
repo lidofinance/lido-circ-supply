@@ -2,20 +2,19 @@ import { Controller, Get, Header, Version } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TokensService } from 'tokens';
 
-@Controller('plain')
-@ApiTags('Plain Supply Data With Decimals')
-export class SupplyPlainController {
+@Controller('plain/total')
+@ApiTags('Plain Total Supply')
+export class SupplyTotalPlainController {
   constructor(protected readonly tokensService: TokensService) {}
-
   @Version('1')
   @Get('ldo')
   @Header('content-type', 'text/html')
   @ApiResponse({
     status: 200,
-    description: 'Returns LDO supply information',
+    description: 'Returns LDO total supply information',
   })
-  ldoCircSupplyV1(): string {
-    return this.tokensService.getTokenPlainCircSupply('ldo');
+  ldoTotalSupplyV1(): string {
+    return this.tokensService.getTokenPlainTotalSupply('ldo');
   }
 
   @Version('1')
@@ -23,10 +22,10 @@ export class SupplyPlainController {
   @Header('content-type', 'text/html')
   @ApiResponse({
     status: 200,
-    description: 'Returns stETH supply information',
+    description: 'Returns stETH total supply information',
   })
-  stethCircSupplyV1(): string {
-    return this.tokensService.getTokenPlainCircSupply('steth');
+  stethTotalSupplyV1(): string {
+    return this.tokensService.getTokenPlainTotalSupply('steth');
   }
 
   @Version('1')
@@ -34,9 +33,9 @@ export class SupplyPlainController {
   @Header('content-type', 'text/html')
   @ApiResponse({
     status: 200,
-    description: 'Returns wstETH supply information',
+    description: 'Returns wstETH total supply information',
   })
-  wstethCircSupplyV1(): string {
-    return this.tokensService.getTokenPlainCircSupply('wsteth');
+  wstethTotalSupplyV1(): string {
+    return this.tokensService.getTokenPlainTotalSupply('wsteth');
   }
 }
