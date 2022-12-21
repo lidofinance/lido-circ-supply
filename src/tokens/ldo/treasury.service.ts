@@ -1,11 +1,6 @@
 import { Inject, Injectable, LoggerService } from '@nestjs/common';
 import { LOGGER_PROVIDER } from '@lido-nestjs/logger';
-import {
-  LIDO_CONTRACT_TOKEN,
-  LDO_CONTRACT_TOKEN,
-  Lido,
-  Ldo,
-} from '@lido-nestjs/contracts';
+import { LIDO_CONTRACT_TOKEN, LDO_CONTRACT_TOKEN, Lido, Ldo } from '@lido-nestjs/contracts';
 import { Block } from '@ethersproject/abstract-provider';
 import { BigNumber } from '@ethersproject/bignumber';
 
@@ -25,10 +20,7 @@ export class LdoTreasuryService {
     const overrides = { blockTag: { blockHash: blockInfo.hash } } as any;
 
     const treasuryAddress = await this.lidoContract.getTreasury(overrides);
-    const treasuryBalance = await this.ldoContract.balanceOf(
-      treasuryAddress,
-      overrides,
-    );
+    const treasuryBalance = await this.ldoContract.balanceOf(treasuryAddress, overrides);
 
     return treasuryBalance;
   }

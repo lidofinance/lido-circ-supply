@@ -22,9 +22,6 @@ import { HTTPModule } from '../http';
     WorkerModule,
     ScheduleModule.forRoot(),
   ],
-  providers: [
-    { provide: APP_INTERCEPTOR, useClass: SentryInterceptor },
-    AppService,
-  ],
+  providers: [{ provide: APP_INTERCEPTOR, useClass: SentryInterceptor }, AppService],
 })
 export class AppModule {}

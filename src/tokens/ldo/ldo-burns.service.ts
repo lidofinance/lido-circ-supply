@@ -42,11 +42,7 @@ export class LdoBurnsService {
     // TODO:
     // There will be an error when over 10000 events
     // Need to receive events in chunks
-    const events = await this.ldoContract.queryFilter(
-      filter,
-      fromBlock,
-      toBlock,
-    );
+    const events = await this.ldoContract.queryFilter(filter, fromBlock, toBlock);
 
     const updatedAddresses = new Set<string>();
     events.forEach((event) => updatedAddresses.add(event.args._from));
@@ -62,10 +58,7 @@ export class LdoBurnsService {
       toBlock,
     });
 
-    this.prometheusService.tokenInfo.set(
-      { token: 'ldo', field: 'burns' },
-      allAddresses.size,
-    );
+    this.prometheusService.tokenInfo.set({ token: 'ldo', field: 'burns' }, allAddresses.size);
 
     return { updatedAddresses, allAddresses };
   }

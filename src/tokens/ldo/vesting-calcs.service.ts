@@ -6,9 +6,7 @@ import { VestingInfo } from './interfaces';
 
 @Injectable()
 export class LdoVestingCalcsService {
-  constructor(
-    @Inject(LOGGER_PROVIDER) protected readonly logger: LoggerService,
-  ) {}
+  constructor(@Inject(LOGGER_PROVIDER) protected readonly logger: LoggerService) {}
 
   /**
    * Calculates the amount of locked tokens for a list of vestings at a specific time
@@ -22,10 +20,7 @@ export class LdoVestingCalcsService {
     let totalLocked = BigNumber.from(0);
 
     vestings.forEach((memberVestings, memberAddress) => {
-      const memberNotVested = this.calculateMultiplyVestings(
-        memberVestings,
-        timestamp,
-      );
+      const memberNotVested = this.calculateMultiplyVestings(memberVestings, timestamp);
 
       /**
        * Member's tokens can be burned without a vesting update,
@@ -37,10 +32,7 @@ export class LdoVestingCalcsService {
       if (burns.has(memberAddress)) {
         const memberBalance = balances.get(memberAddress);
 
-        memberLockedTokens = this.subtractBurnedTokens(
-          memberNotVested,
-          memberBalance,
-        );
+        memberLockedTokens = this.subtractBurnedTokens(memberNotVested, memberBalance);
       }
 
       totalLocked = totalLocked.add(memberLockedTokens);
@@ -52,10 +44,7 @@ export class LdoVestingCalcsService {
   /**
    * Subtracts burned tokens from the total amount of locked tokens
    */
-  protected subtractBurnedTokens(
-    nonVested: BigNumber,
-    balance: BigNumber,
-  ): BigNumber {
+  protected subtractBurnedTokens(nonVested: BigNumber, balance: BigNumber): BigNumber {
     if (balance == null) throw new Error(`Balance can't be null`);
     return balance.lt(nonVested) ? balance : nonVested;
   }
@@ -63,10 +52,7 @@ export class LdoVestingCalcsService {
   /**
    * Calculates amount of non-vested tokens for a list of vestings at a specific time
    */
-  protected calculateMultiplyVestings(
-    vestings: VestingInfo[],
-    timestamp: number,
-  ): BigNumber {
+  protected calculateMultiplyVestings(vestings: VestingInfo[], timestamp: number): BigNumber {
     let total = BigNumber.from(0);
 
     vestings.forEach((vestingInfo) => {
@@ -81,10 +67,7 @@ export class LdoVestingCalcsService {
    * Calculates amount of non-vested tokens at a specific time
    * https://github.com/aragon/aragon-apps/blob/6f581bf8ec43697c481f3692127f2ed0a2fba9de/apps/token-manager/contracts/TokenManager.sol#L358
    */
-  protected calculateOneVesting(
-    vestingInfo: VestingInfo,
-    timestamp: number,
-  ): BigNumber {
+  protected calculateOneVesting(vestingInfo: VestingInfo, timestamp: number): BigNumber {
     const { amount, cliff, start, vesting } = vestingInfo;
 
     if (timestamp >= vesting) {

@@ -1,9 +1,5 @@
 import { Module } from '@nestjs/common';
-import {
-  AragonTokenManagerContractModule,
-  LdoContractModule,
-  LidoContractModule,
-} from '@lido-nestjs/contracts';
+import { AragonTokenManagerContractModule, LdoContractModule, LidoContractModule } from '@lido-nestjs/contracts';
 import { SimpleFallbackJsonRpcBatchProvider } from '@lido-nestjs/execution';
 import { LdoService } from './ldo.service';
 import { LdoBalanceService } from './ldo-balance.service';

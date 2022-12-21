@@ -7,10 +7,6 @@ import { SupplyJsonController } from './supply-json.controller';
 
 @Module({
   imports: [TokensModule],
-  controllers: [
-    SupplyCircPlainController,
-    SupplyTotalPlainController,
-    SupplyJsonController,
-  ],
+  controllers: [SupplyCircPlainController, SupplyTotalPlainController, SupplyJsonController],
 })
 export class SupplyModule {}

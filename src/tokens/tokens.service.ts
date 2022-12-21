@@ -45,11 +45,7 @@ export class TokensService {
   /**
    * Saves token data to the storage
    */
-  public saveTokenData(
-    tokenName: string,
-    blockInfo: Block,
-    tokenInfo: TokenInfo,
-  ): void {
+  public saveTokenData(tokenName: string, blockInfo: Block, tokenInfo: TokenInfo): void {
     const blockNumber = blockInfo.number;
     const blockHash = blockInfo.hash;
     const blockTimestamp = blockInfo.timestamp;
@@ -86,9 +82,6 @@ export class TokensService {
       Number(formatUnits(circSupply, data.decimals)),
     );
 
-    this.prometheusService.tokenInfo.set(
-      { token, field: 'update-timestamp' },
-      data.blockTimestamp,
-    );
+    this.prometheusService.tokenInfo.set({ token, field: 'update-timestamp' }, data.blockTimestamp);
   }
 }

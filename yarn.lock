@@ -1098,6 +1098,11 @@
     "@lido-nestjs/constants" "1.1.0"
     ethers "^5.5.4"
 
+"@lido-nestjs/decorators@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@lido-nestjs/decorators/-/decorators-1.0.0.tgz#def4d0192b032c0d522de1b9bf38d1bec3c63077"
+  integrity sha512-6k2eeLV7tFjKiqk26LWZHWfLowVuUbKC6+NunHHZIqEtO4xRWeOwMg6ntm0AEMdZ0WL0F6KDrFV+g7bhWB4cWA==
+
 "@lido-nestjs/execution@^1.4.0":
   version "1.8.3"
   resolved "https://registry.yarnpkg.com/@lido-nestjs/execution/-/execution-1.8.3.tgz#9dc86e2097a6582683af5256a6ef60cf8655483f"
