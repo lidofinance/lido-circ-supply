@@ -7,17 +7,13 @@ import { ConfigService } from 'common/config';
 @Module({
   imports: [
     FallbackProviderModule.forRootAsync({
-      async useFactory(
-        configService: ConfigService,
-        prometheusService: PrometheusService,
-      ) {
+      async useFactory(configService: ConfigService, prometheusService: PrometheusService) {
         return {
           urls: configService.get('EL_API_URLS'),
           network: configService.get('CHAIN_ID'),
           fetchMiddlewares: [
             async (next) => {
-              const endTimer =
-                prometheusService.elRpcRequestDuration.startTimer();
+              const endTimer = prometheusService.elRpcRequestDuration.startTimer();
 
               try {
                 const result = await next();

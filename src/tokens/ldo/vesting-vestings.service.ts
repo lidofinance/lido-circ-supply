@@ -34,10 +34,7 @@ export class LdoVestingVestingsService {
       membersLength: updatedMembers.size,
     });
 
-    const updatedVestings = await this.fetchMembersVestings(
-      updatedMembers,
-      blockInfo,
-    );
+    const updatedVestings = await this.fetchMembersVestings(updatedMembers, blockInfo);
 
     this.mergeVestings(updatedVestings);
     const allVestings = this.membersVestings;
@@ -50,10 +47,7 @@ export class LdoVestingVestingsService {
       allVestingsLength,
     });
 
-    this.prometheusService.tokenInfo.set(
-      { token: 'ldo', field: 'vestings' },
-      allVestings.size,
-    );
+    this.prometheusService.tokenInfo.set({ token: 'ldo', field: 'vestings' }, allVestings.size);
 
     return { updatedVestings, allVestings };
   }
@@ -61,18 +55,12 @@ export class LdoVestingVestingsService {
   /**
    * Returns all vestings for list of members
    */
-  protected async fetchMembersVestings(
-    members: Set<string>,
-    blockInfo: Block,
-  ): Promise<Map<string, VestingInfo[]>> {
+  protected async fetchMembersVestings(members: Set<string>, blockInfo: Block): Promise<Map<string, VestingInfo[]>> {
     const fetchedVestings = new Map<string, VestingInfo[]>();
 
     await Promise.all(
       [...members].map(async (member) => {
-        const memberVestings = await this.fetchOneMemberVestings(
-          member,
-          blockInfo,
-        );
+        const memberVestings = await this.fetchOneMemberVestings(member, blockInfo);
 
         fetchedVestings.set(member, memberVestings);
       }),
@@ -84,10 +72,7 @@ export class LdoVestingVestingsService {
   /**
    * Fetches all vestings for one member
    */
-  protected async fetchOneMemberVestings(
-    member: string,
-    blockInfo: Block,
-  ): Promise<VestingInfo[]> {
+  protected async fetchOneMemberVestings(member: string, blockInfo: Block): Promise<VestingInfo[]> {
     // Collecting data by blockHash ensures that all data is from the same block
     const overrides = { blockTag: { blockHash: blockInfo.hash } } as any;
 
@@ -96,11 +81,7 @@ export class LdoVestingVestingsService {
 
     return await Promise.all(
       vestingIds.map(async (vestingId) => {
-        const vestingInfo = await this.tmContract.getVesting(
-          member,
-          vestingId,
-          overrides,
-        );
+        const vestingInfo = await this.tmContract.getVesting(member, vestingId, overrides);
 
         return {
           amount: vestingInfo.amount,
@@ -117,20 +98,13 @@ export class LdoVestingVestingsService {
    * Merges updated vestings with the saved list
    */
   protected mergeVestings(updatedVestings: Map<string, VestingInfo[]>): void {
-    updatedVestings.forEach((memberVestings, memberAddress) =>
-      this.membersVestings.set(memberAddress, memberVestings),
-    );
+    updatedVestings.forEach((memberVestings, memberAddress) => this.membersVestings.set(memberAddress, memberVestings));
   }
 
   /**
    * Calculates the length of the all vestings
    */
-  protected getVestingsLength(
-    membersVestings: Map<string, VestingInfo[]>,
-  ): number {
-    return [...membersVestings].reduce(
-      (acc, [, vestings]) => acc + vestings.length,
-      0,
-    );
+  protected getVestingsLength(membersVestings: Map<string, VestingInfo[]>): number {
+    return [...membersVestings].reduce((acc, [, vestings]) => acc + vestings.length, 0);
   }
 }

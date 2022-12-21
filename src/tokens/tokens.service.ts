@@ -26,6 +26,16 @@ export class TokensService {
   }
 
   /**
+   * Gets token total supply from the storage
+   */
+  public getTokenPlainTotalSupply(tokenName: string): string {
+    const tokenData = this.storageService.get(tokenName);
+    const totalSupply = BigNumber.from(tokenData.totalSupply);
+
+    return formatUnits(totalSupply, tokenData.decimals);
+  }
+
+  /**
    * Gets token info from the storage
    */
   public getTokenData(tokenName: string): TokenData {
@@ -35,11 +45,7 @@ export class TokensService {
   /**
    * Saves token data to the storage
    */
-  public saveTokenData(
-    tokenName: string,
-    blockInfo: Block,
-    tokenInfo: TokenInfo,
-  ): void {
+  public saveTokenData(tokenName: string, blockInfo: Block, tokenInfo: TokenInfo): void {
     const blockNumber = blockInfo.number;
     const blockHash = blockInfo.hash;
     const blockTimestamp = blockInfo.timestamp;
@@ -76,9 +82,6 @@ export class TokensService {
       Number(formatUnits(circSupply, data.decimals)),
     );
 
-    this.prometheusService.tokenInfo.set(
-      { token, field: 'update-timestamp' },
-      data.blockTimestamp,
-    );
+    this.prometheusService.tokenInfo.set({ token, field: 'update-timestamp' }, data.blockTimestamp);
   }
 }

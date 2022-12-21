@@ -71,10 +71,7 @@ export class LdoVestingMembersService {
       toBlock,
     });
 
-    this.prometheusService.tokenInfo.set(
-      { token: 'ldo', field: 'vesting-members' },
-      allAddresses.size,
-    );
+    this.prometheusService.tokenInfo.set({ token: 'ldo', field: 'vesting-members' }, allAddresses.size);
 
     return { updatedAddresses, allAddresses };
   }

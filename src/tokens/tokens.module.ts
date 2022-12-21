@@ -13,11 +13,7 @@ import { StorageModule } from 'storage';
     {
       provide: TOKEN_SERVICES,
       inject: [LdoService, StethService, WstethService],
-      useFactory(
-        ldoService: LdoService,
-        stethService: StethService,
-        wstethService: WstethService,
-      ) {
+      useFactory(ldoService: LdoService, stethService: StethService, wstethService: WstethService) {
         return [ldoService, stethService, wstethService];
       },
     },

@@ -6,8 +6,8 @@ Service returns circulating supply for Lido tokens.
 
 API service is deployed in the mainnet and testnet chains. A list of available endpoints can be found in the Swagger:
 
-- Mainnet: https://circ-supply.lido.fi/api/static/index.html
-- Goerli: https://circ-supply.testnet.fi/api/static/index.html
+- Mainnet: https://circ-supply.lido.fi/api
+- Goerli: https://circ-supply.testnet.fi/api
 
 ## Circ supply calculations
 
@@ -197,4 +197,4 @@ To create new release:
 1. When action execution is finished, navigate to Repo => Pull requests
 1. Find pull request named "chore(release): X.X.X" review and merge it with "Rebase and merge" (or "Squash and merge")
 1. After merge release action will be triggered automatically
-1. Navigate to Repo => Actions and see last actions logs for further details 
+1. Navigate to Repo => Actions and see last actions logs for further details

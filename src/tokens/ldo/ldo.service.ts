@@ -23,13 +23,12 @@ export class LdoService implements TokenService {
     // Collecting data by blockHash ensures that all data is from the same block
     const overrides = { blockTag: { blockHash: blockInfo.hash } } as any;
 
-    const [totalSupply, decimals, treasuryAmount, lockedAmount] =
-      await Promise.all([
-        this.ldoContract.totalSupply(overrides),
-        this.ldoContract.decimals(overrides),
-        this.treasuryService.getTreasuryBalance(blockInfo),
-        this.vestingService.collectLockedAmount(blockInfo),
-      ]);
+    const [totalSupply, decimals, treasuryAmount, lockedAmount] = await Promise.all([
+      this.ldoContract.totalSupply(overrides),
+      this.ldoContract.decimals(overrides),
+      this.treasuryService.getTreasuryBalance(blockInfo),
+      this.vestingService.collectLockedAmount(blockInfo),
+    ]);
 
     const circSupply = totalSupply.sub(treasuryAmount).sub(lockedAmount);
 

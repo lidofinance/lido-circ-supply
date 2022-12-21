@@ -5,13 +5,8 @@ import { METRICS_PREFIX } from './prometheus.constants';
 export class PrometheusService {
   protected prefix = METRICS_PREFIX;
 
-  protected getOrCreateMetric<T extends Metrics, L extends string>(
-    type: T,
-    options: Options<L>,
-  ): Metric<T, L> {
-    const prefixedName = options.prefix
-      ? this.prefix + options.name
-      : options.name;
+  protected getOrCreateMetric<T extends Metrics, L extends string>(type: T, options: Options<L>): Metric<T, L> {
+    const prefixedName = options.prefix ? this.prefix + options.name : options.name;
 
     return getOrCreateMetric(type, {
       ...options,

@@ -1,9 +1,4 @@
-import {
-  Inject,
-  Injectable,
-  LoggerService,
-  OnModuleInit,
-} from '@nestjs/common';
+import { Inject, Injectable, LoggerService, OnModuleInit } from '@nestjs/common';
 import { SimpleFallbackJsonRpcBatchProvider } from '@lido-nestjs/execution';
 import { LOGGER_PROVIDER } from '@lido-nestjs/logger';
 import { CHAINS } from '@lido-nestjs/constants';
@@ -28,10 +23,7 @@ export class AppService implements OnModuleInit {
     const version = APP_VERSION;
     const name = APP_NAME;
 
-    this.prometheusService.buildInfo
-      .labels({ env, network, name, version })
-      .inc();
-
+    this.prometheusService.buildInfo.labels({ env, network, name, version }).inc();
     this.logger.log('Init app', { env, network, name, version });
   }
 

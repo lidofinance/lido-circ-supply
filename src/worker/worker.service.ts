@@ -4,8 +4,8 @@ import { SchedulerRegistry } from '@nestjs/schedule';
 import { Block } from '@ethersproject/abstract-provider';
 import { SimpleFallbackJsonRpcBatchProvider } from '@lido-nestjs/execution';
 import { LOGGER_PROVIDER } from '@lido-nestjs/logger';
+import { OneAtTime } from '@lido-nestjs/decorators';
 import { ConfigService } from 'common/config';
-import { OneAtTime } from 'common/decorators';
 import { TOKEN_SERVICES, TokenService, TokensService } from 'tokens';
 
 export class WorkerService implements OnModuleInit {
