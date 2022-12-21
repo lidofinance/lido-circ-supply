@@ -1,3 +1,12 @@
+# [0.5.0](https://github.com/lidofinance/lido-circ-supply/compare/0.4.0...0.5.0) (2022-12-21)
+
+
+### Features
+
+* total supply ([71dc824](https://github.com/lidofinance/lido-circ-supply/commit/71dc8245a26ade3e399fd0f8a9f84c04a6d23344))
+
+
+
 # [0.4.0](https://github.com/lidofinance/lido-circ-supply/compare/0.2.1...0.4.0) (2022-11-30)
 
 
