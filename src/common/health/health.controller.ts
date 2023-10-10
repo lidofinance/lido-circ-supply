@@ -6,7 +6,10 @@ import { HEALTH_URL } from './health.constants';
 @Controller(HEALTH_URL)
 @ApiExcludeController()
 export class HealthController {
-  constructor(protected health: HealthCheckService, protected memory: MemoryHealthIndicator) {}
+  constructor(
+    protected health: HealthCheckService,
+    protected memory: MemoryHealthIndicator,
+  ) {}
 
   @Get()
   @HealthCheck()
