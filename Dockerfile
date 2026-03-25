@@ -22,4 +22,4 @@ USER node
 HEALTHCHECK --interval=60s --timeout=10s --retries=3 \
   CMD sh -c "wget -nv -t1 --spider http://localhost:$PORT/health" || exit 1
 
-CMD ["yarn", "start:prod"]
+CMD ["sh", "-c", "source /vault/secrets/app && exec yarn start:prod"]
