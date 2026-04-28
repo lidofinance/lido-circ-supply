@@ -1,4 +1,4 @@
-name: CI K8s Dev
+name: Run CI K8s Dev
 
 on:
   workflow_dispatch:
