@@ -25,6 +25,11 @@ export class WorkerService implements OnModuleInit {
    * Initializes the tokens update cycle
    */
   public async onModuleInit(): Promise<void> {
+    if (!this.configService.get('TOKEN_UPDATE_ENABLED')) {
+      this.logger.warn('Tokens update cycle is disabled, serving no data');
+      return;
+    }
+
     await this.runTokensUpdateCycle();
 
     const jobName = 'tokens';
