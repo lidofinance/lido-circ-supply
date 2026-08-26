@@ -67,7 +67,9 @@ export class EnvironmentVariables {
 
   @IsOptional()
   @IsString()
-  TOKEN_UPDATE_CRON = '*/1 * * * *';
+  // TODO: temporary 3h cadence for staging to save RPC quota; revert to
+  // '*/1 * * * *' (or set via chart values) before the mainnet deploy
+  TOKEN_UPDATE_CRON = '0 */3 * * *';
 }
 
 export function validate(config: Record<string, unknown>) {
