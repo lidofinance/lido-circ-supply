@@ -39,7 +39,7 @@ async function bootstrap() {
         if (!origin || whitelistRegexp.test(origin)) {
           callback(null, true);
         } else {
-          callback(new Error('Not allowed by CORS'));
+          callback(new Error('Not allowed by CORS'), false);
         }
       },
     });
