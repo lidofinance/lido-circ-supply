@@ -8,3 +8,28 @@ const packageJson = JSON.parse(readFileSync(join(__dirname, '..', '..', 'package
 export const APP_VERSION: string = packageJson.version;
 export const APP_NAME: string = packageJson.name;
 export const APP_DESCRIPTION: string = packageJson.description;
+
+// CI replaces the REPLACE_WITH_* placeholders in build-info.json with the
+// actual values; locally the file keeps the placeholders
+const readBuildInfo = (): Record<string, string> => {
+  try {
+    return JSON.parse(readFileSync(join(__dirname, '..', '..', 'build-info.json'), 'utf8'));
+  } catch {
+    return {};
+  }
+};
+
+const buildInfo = readBuildInfo();
+
+const getBuildInfoField = (field: string): string => {
+  const value = buildInfo[field];
+
+  if (!value || value.startsWith('REPLACE_WITH')) {
+    return 'unknown';
+  }
+
+  return value;
+};
+
+export const APP_BRANCH: string = getBuildInfoField('branch');
+export const APP_COMMIT: string = getBuildInfoField('commit');

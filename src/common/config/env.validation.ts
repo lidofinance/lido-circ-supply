@@ -77,7 +77,16 @@ export function validate(config: Record<string, unknown>) {
   const errors = validateSync(validatedConfig, validatorOptions);
 
   if (errors.length > 0) {
-    console.error(errors.toString());
+    // The structured logger is not initialized yet at this point, so mimic
+    // its JSON format to keep the error visible to log pipelines
+    const message = errors.toString();
+
+    if (config.LOG_FORMAT === LogFormat.simple) {
+      console.error(message);
+    } else {
+      console.error(JSON.stringify({ level: 'error', message, timestamp: new Date().toISOString() }));
+    }
+
     process.exit(1);
   }
 

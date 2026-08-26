@@ -28,7 +28,7 @@ RUN apk upgrade --no-cache \
 
 COPY --from=production-deps /app/node_modules ./node_modules
 COPY --from=building /app/dist ./dist
-COPY ./package.json ./
+COPY ./package.json ./build-info.json ./
 
 USER node
 

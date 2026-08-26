@@ -27,6 +27,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
+      - name: Fill build-info.json
+        run: |
+          sed -i "s|REPLACE_WITH_VERSION|$(jq -r .version package.json)|" build-info.json
+          sed -i "s|REPLACE_WITH_BRANCH|${GITHUB_REF_NAME}|" build-info.json
+          sed -i "s|REPLACE_WITH_COMMIT|${GITHUB_SHA}|" build-info.json
+          cat build-info.json
+
       - name: Setup buildx
         id: buildx
         uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
