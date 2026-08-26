@@ -1,5 +1,6 @@
-import { Controller, Get, Version } from '@nestjs/common';
+import { Controller, Get, Header, Version } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { SUPPLY_CACHE_CONTROL } from 'http/common/cache';
 import { SupplyEntity } from './supply.entity';
 import { TokensService } from 'tokens';
 
@@ -10,6 +11,7 @@ export class SupplyJsonController {
 
   @Version('1')
   @Get('ldo')
+  @Header('Cache-Control', SUPPLY_CACHE_CONTROL)
   @ApiResponse({
     status: 200,
     description: 'Returns LDO supply information',
@@ -21,6 +23,7 @@ export class SupplyJsonController {
 
   @Version('1')
   @Get('steth')
+  @Header('Cache-Control', SUPPLY_CACHE_CONTROL)
   @ApiResponse({
     status: 200,
     description: 'Returns stETH supply information',
@@ -32,6 +35,7 @@ export class SupplyJsonController {
 
   @Version('1')
   @Get('wsteth')
+  @Header('Cache-Control', SUPPLY_CACHE_CONTROL)
   @ApiResponse({
     status: 200,
     description: 'Returns wstETH supply information',
