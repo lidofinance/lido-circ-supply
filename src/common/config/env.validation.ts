@@ -1,16 +1,6 @@
 import { NonEmptyArray } from '@lido-nestjs/execution/dist/interfaces/non-empty-array';
 import { plainToClass, Transform } from 'class-transformer';
-import {
-  IsEnum,
-  IsNumber,
-  IsString,
-  IsOptional,
-  IsArray,
-  IsBoolean,
-  validateSync,
-  ArrayMinSize,
-  Min,
-} from 'class-validator';
+import { IsEnum, IsNumber, IsString, IsOptional, IsArray, validateSync, ArrayMinSize, Min } from 'class-validator';
 import { Environment, LogLevel, LogFormat } from './interfaces';
 
 const toNumber =
@@ -18,13 +8,6 @@ const toNumber =
   ({ value }) => {
     if (value === '' || value == null) return defaultValue;
     return Number(value);
-  };
-
-const toBoolean =
-  ({ defaultValue }) =>
-  ({ value }) => {
-    if (value === '' || value == null) return defaultValue;
-    return value !== 'false' && value !== '0';
   };
 
 export class EnvironmentVariables {
@@ -85,16 +68,6 @@ export class EnvironmentVariables {
   @IsOptional()
   @IsString()
   TOKEN_UPDATE_CRON = '*/1 * * * *';
-
-  /**
-   * Set to `false` to boot the HTTP server without running the tokens update
-   * cycle at all — useful for test deployments where the app only has to come
-   * up healthy and must not touch the execution layer.
-   */
-  @IsOptional()
-  @IsBoolean()
-  @Transform(toBoolean({ defaultValue: true }))
-  TOKEN_UPDATE_ENABLED = true;
 }
 
 export function validate(config: Record<string, unknown>) {
