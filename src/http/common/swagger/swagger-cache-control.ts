@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import { SWAGGER_URL } from './swagger.constants';
 
-const SWAGGER_CACHE_CONTROL = 'no-store';
+const SWAGGER_CACHE_CONTROL = 'no-cache, must-revalidate';
 const SWAGGER_PATH = `/${SWAGGER_URL}`;
 
 const isSwaggerPath = (path: string): boolean =>

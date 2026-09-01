@@ -4,14 +4,14 @@ import { setSwaggerCacheControl } from './swagger-cache-control';
 describe('setSwaggerCacheControl', () => {
   const swaggerPaths = ['/api', '/api/', '/api/index.html', '/api/swagger-ui.css', '/api-json', '/api-yaml'];
 
-  it.each(swaggerPaths)('sets no-store for %s', async (url) => {
+  it.each(swaggerPaths)('sets no-cache for %s', async (url) => {
     const fastify = new FastifyAdapter().getInstance();
     setSwaggerCacheControl(fastify);
     fastify.get(url, async () => 'ok');
 
     const response = await fastify.inject(url);
 
-    expect(response.headers['cache-control']).toBe('no-store');
+    expect(response.headers['cache-control']).toBe('no-cache, must-revalidate');
     await fastify.close();
   });
 
@@ -22,7 +22,7 @@ describe('setSwaggerCacheControl', () => {
 
     const response = await fastify.inject('/api-json?format=openapi');
 
-    expect(response.headers['cache-control']).toBe('no-store');
+    expect(response.headers['cache-control']).toBe('no-cache, must-revalidate');
     await fastify.close();
   });
 
