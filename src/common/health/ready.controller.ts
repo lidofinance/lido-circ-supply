@@ -1,12 +1,14 @@
 import { HealthCheckService, HealthCheck, HealthCheckError, HealthIndicatorResult } from '@nestjs/terminus';
 import { Controller, Get, Inject } from '@nestjs/common';
 import { ApiExcludeController } from '@nestjs/swagger';
+import { SkipCache } from 'http/common/cache';
 import { TOKEN_SERVICES, TokenService } from 'tokens';
 import { StorageService } from 'storage';
 import { READY_URL } from './health.constants';
 
 @Controller(READY_URL)
 @ApiExcludeController()
+@SkipCache()
 export class ReadyController {
   constructor(
     @Inject(TOKEN_SERVICES) protected readonly servicesList: TokenService[],
