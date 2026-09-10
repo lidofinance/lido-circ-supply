@@ -18,7 +18,7 @@ export class EnvironmentVariables {
   @IsNumber()
   @Min(1)
   @Transform(toNumber({ defaultValue: 3000 }))
-  PORT: number;
+  PORT = 3000;
 
   @IsOptional()
   @IsString()
@@ -28,19 +28,19 @@ export class EnvironmentVariables {
   @IsNumber()
   @Min(1)
   @Transform(toNumber({ defaultValue: 5 }))
-  GLOBAL_THROTTLE_TTL: number;
+  GLOBAL_THROTTLE_TTL = 5;
 
   @IsOptional()
   @IsNumber()
   @Min(1)
   @Transform(toNumber({ defaultValue: 100 }))
-  GLOBAL_THROTTLE_LIMIT: number;
+  GLOBAL_THROTTLE_LIMIT = 100;
 
   @IsOptional()
   @IsNumber()
   @Min(1)
   @Transform(toNumber({ defaultValue: 1 }))
-  GLOBAL_CACHE_TTL: number;
+  GLOBAL_CACHE_TTL = 1;
 
   @IsOptional()
   @IsString()
@@ -67,7 +67,9 @@ export class EnvironmentVariables {
 
   @IsOptional()
   @IsString()
-  TOKEN_UPDATE_CRON = '*/1 * * * *';
+  // TODO: temporary 3h cadence for staging to save RPC quota; revert to
+  // '*/1 * * * *' (or set via chart values) before the mainnet deploy
+  TOKEN_UPDATE_CRON = '0 */3 * * *';
 }
 
 export function validate(config: Record<string, unknown>) {
@@ -77,7 +79,16 @@ export function validate(config: Record<string, unknown>) {
   const errors = validateSync(validatedConfig, validatorOptions);
 
   if (errors.length > 0) {
-    console.error(errors.toString());
+    // The structured logger is not initialized yet at this point, so mimic
+    // its JSON format to keep the error visible to log pipelines
+    const message = errors.toString();
+
+    if (config.LOG_FORMAT === LogFormat.simple) {
+      console.error(message);
+    } else {
+      console.error(JSON.stringify({ level: 'error', message, timestamp: new Date().toISOString() }));
+    }
+
     process.exit(1);
   }
 
