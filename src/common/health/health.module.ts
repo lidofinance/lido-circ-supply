@@ -8,6 +8,6 @@ import { ReadyController } from './ready.controller';
 @Module({
   providers: [],
   controllers: [HealthController, ReadyController],
-  imports: [TerminusModule, TokensModule, StorageModule],
+  imports: [TerminusModule.forRoot({ logger: false }), TokensModule, StorageModule],
 })
 export class HealthModule {}

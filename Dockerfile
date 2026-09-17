@@ -35,4 +35,4 @@ USER node
 HEALTHCHECK --interval=60s --timeout=10s --retries=3 \
   CMD sh -c "wget -nv -t1 --spider http://localhost:${PORT:-3000}/health" || exit 1
 
-CMD ["sh", "-c", "source /vault/secrets/app && exec node dist/main"]
+CMD ["node", "dist/main"]

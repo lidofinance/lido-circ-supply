@@ -20,14 +20,21 @@ export const queryFilterInChunks = async <TEvent>(
 
   const eventsByChunk: TEvent[][] = new Array(chunks.length);
   let nextChunkIndex = 0;
+  let isFailed = false;
 
   const worker = async (): Promise<void> => {
-    while (nextChunkIndex < chunks.length) {
+    while (!isFailed && nextChunkIndex < chunks.length) {
       const chunkIndex = nextChunkIndex;
       nextChunkIndex += 1;
 
       const { chunkFromBlock, chunkToBlock } = chunks[chunkIndex];
-      eventsByChunk[chunkIndex] = await queryFn(chunkFromBlock, chunkToBlock);
+
+      try {
+        eventsByChunk[chunkIndex] = await queryFn(chunkFromBlock, chunkToBlock);
+      } catch (error) {
+        isFailed = true;
+        throw error;
+      }
     }
   };
 
