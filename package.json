@@ -50,7 +50,6 @@
     "**/@ethersproject/providers/ws": "^7.5.11",
     "validator": "^13.15.22",
     "lodash": "^4.18.0",
-    "fast-uri": "^2.4.4",
     "path-to-regexp": "^8.4.2",
     "@nestjs/swagger/js-yaml": "^4.3.1"
   },
