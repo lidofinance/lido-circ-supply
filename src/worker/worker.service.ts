@@ -24,8 +24,11 @@ export class WorkerService implements OnModuleInit {
   /**
    * Initializes the tokens update cycle
    */
-  public async onModuleInit(): Promise<void> {
-    await this.runTokensUpdateCycle();
+  public onModuleInit(): void {
+    // The first cycle scans logs from genesis and takes minutes; it must not
+    // block bootstrap, otherwise the HTTP server never starts listening and
+    // k8s probes kill the pod. Endpoints respond with 503 until the data is in.
+    void this.runTokensUpdateCycle();
 
     const jobName = 'tokens';
     const jobInterval = this.configService.get('TOKEN_UPDATE_CRON');

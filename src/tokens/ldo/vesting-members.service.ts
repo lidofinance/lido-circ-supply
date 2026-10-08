@@ -6,6 +6,7 @@ import {
 import { LOGGER_PROVIDER } from '@lido-nestjs/logger';
 import { Block } from '@ethersproject/abstract-provider';
 import { PrometheusService } from 'common/prometheus';
+import { queryFilterInChunks } from 'common/provider';
 import { OVERLAPPING_REORG_OFFSET } from './ldo.constants';
 
 @Injectable()
@@ -47,12 +48,13 @@ export class LdoVestingMembersService {
       toBlock,
     });
 
-    // TODO:
-    // There will be an error when over 10000 events
-    // Need to receive events in chunks
     const [newEvents, revokeEvents] = await Promise.all([
-      this.tmContract.queryFilter(newFilter, fromBlock, toBlock),
-      this.tmContract.queryFilter(revokeFilter, fromBlock, toBlock),
+      queryFilterInChunks(fromBlock, toBlock, (chunkFromBlock, chunkToBlock) =>
+        this.tmContract.queryFilter(newFilter, chunkFromBlock, chunkToBlock),
+      ),
+      queryFilterInChunks(fromBlock, toBlock, (chunkFromBlock, chunkToBlock) =>
+        this.tmContract.queryFilter(revokeFilter, chunkFromBlock, chunkToBlock),
+      ),
     ]);
 
     const updatedAddresses = new Set<string>();

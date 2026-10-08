@@ -1,0 +1,2 @@
+export const LOGS_FETCH_CHUNK_SIZE = 4_999;
+export const LOGS_FETCH_CONCURRENCY = 5;
