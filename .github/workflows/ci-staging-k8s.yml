@@ -8,8 +8,7 @@ on:
     branches:
       - main
     paths-ignore:
-      - ".github/**"
-      - "test/**"
+      - '.github/**'
 
 permissions:
   contents: read
