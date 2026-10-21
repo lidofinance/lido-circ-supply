@@ -30,6 +30,16 @@ COPY --from=production-deps /app/node_modules ./node_modules
 COPY --from=building /app/dist ./dist
 COPY ./package.json ./build-info.json ./
 
+# Set by lidofinance/actions k8s-build-push-harbor. Old-infra and local builds leave
+# them empty, so build-info.json stays as copied (infra-mainnet fills it beforehand).
+ARG BUILD_VERSION=
+ARG BUILD_BRANCH=
+ARG BUILD_COMMIT=
+
+RUN if [ -n "$BUILD_VERSION" ]; then sed -i "s|REPLACE_WITH_VERSION|$BUILD_VERSION|" build-info.json; fi \
+  && if [ -n "$BUILD_BRANCH" ]; then sed -i "s|REPLACE_WITH_BRANCH|$BUILD_BRANCH|" build-info.json; fi \
+  && if [ -n "$BUILD_COMMIT" ]; then sed -i "s|REPLACE_WITH_COMMIT|$BUILD_COMMIT|" build-info.json; fi
+
 USER node
 
 HEALTHCHECK --interval=60s --timeout=10s --retries=3 \

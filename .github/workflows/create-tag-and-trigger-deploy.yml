@@ -44,3 +44,12 @@ jobs:
     secrets: inherit
     with:
       tag: ${{ needs.bump.outputs.tag }}
+
+  k8s-prod:
+    needs: bump
+    name: Build and push k8s prod image
+    if: "contains(github.event.head_commit.message, 'chore(release)')"
+    uses: ./.github/workflows/ci-prod-k8s.yml
+    secrets: inherit
+    with:
+      tag: ${{ needs.bump.outputs.tag }}

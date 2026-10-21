@@ -1,6 +1,6 @@
 name: CI K8s Staging
 
-run-name: "[K8S] Build and push lido-circ-supply:staging"
+run-name: Build and push lido-circ-supply:staging to staging
 
 on:
   workflow_dispatch:
@@ -8,7 +8,8 @@ on:
     branches:
       - main
     paths-ignore:
-      - "**.md"
+      - ".github/**"
+      - "test/**"
 
 permissions:
   contents: read
