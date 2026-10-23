@@ -6,6 +6,16 @@ services:
     build: ./
     restart: always
     environment:
-      - PORT=3000
+      - PORT=${PORT}
+      - CORS_WHITELIST_REGEXP=${CORS_WHITELIST_REGEXP}
+      - GLOBAL_THROTTLE_TTL=${GLOBAL_THROTTLE_TTL}
+      - GLOBAL_THROTTLE_LIMIT=${GLOBAL_THROTTLE_LIMIT}
+      - GLOBAL_CACHE_TTL=${GLOBAL_CACHE_TTL}
+      - SENTRY_DSN=${SENTRY_DSN}
+      - LOG_LEVEL=${LOG_LEVEL}
+      - LOG_FORMAT=${LOG_FORMAT}
+      - CHAIN_ID=${CHAIN_ID}
+      - EL_API_URLS=${EL_API_URLS}
+      - TOKEN_UPDATE_CRON=${TOKEN_UPDATE_CRON}
     ports:
       - '3000:3000'

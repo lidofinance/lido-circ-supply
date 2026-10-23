@@ -1,4 +1,4 @@
-import { Inject, LoggerService } from '@nestjs/common';
+import { Inject, LoggerService, ServiceUnavailableException } from '@nestjs/common';
 import { Block } from '@ethersproject/abstract-provider';
 import { formatUnits } from '@ethersproject/units';
 import { BigNumber } from '@ethersproject/bignumber';
@@ -19,7 +19,7 @@ export class TokensService {
    * Gets token circ supply from the storage
    */
   public getTokenPlainCircSupply(tokenName: string): string {
-    const tokenData = this.storageService.get(tokenName);
+    const tokenData = this.getStoredTokenData(tokenName);
     const circSupply = BigNumber.from(tokenData.circSupply);
 
     return formatUnits(circSupply, tokenData.decimals);
@@ -29,7 +29,7 @@ export class TokensService {
    * Gets token total supply from the storage
    */
   public getTokenPlainTotalSupply(tokenName: string): string {
-    const tokenData = this.storageService.get(tokenName);
+    const tokenData = this.getStoredTokenData(tokenName);
     const totalSupply = BigNumber.from(tokenData.totalSupply);
 
     return formatUnits(totalSupply, tokenData.decimals);
@@ -39,7 +39,22 @@ export class TokensService {
    * Gets token info from the storage
    */
   public getTokenData(tokenName: string): TokenData {
-    return this.storageService.get(tokenName);
+    return this.getStoredTokenData(tokenName);
+  }
+
+  /**
+   * Returns stored token data or reports the app as not ready to serve it yet.
+   * The storage is empty until the first update cycle completes, and stays empty
+   * when the update cycle is disabled.
+   */
+  protected getStoredTokenData(tokenName: string): TokenData {
+    const tokenData = this.storageService.get(tokenName);
+
+    if (!tokenData) {
+      throw new ServiceUnavailableException(`No data collected for ${tokenName} yet`);
+    }
+
+    return tokenData;
   }
 
   /**
