@@ -4,10 +4,10 @@ Service returns circulating supply for Lido tokens.
 
 ## Endpoints
 
-API service is deployed in the mainnet and testnet chains. A list of available endpoints can be found in the Swagger:
+API service is deployed on Ethereum mainnet and the Hoodi testnet. A list of available endpoints can be found in the Swagger:
 
 - Mainnet: https://circ-supply.lido.fi/api
-- Goerli: https://circ-supply.testnet.fi/api
+- Hoodi: https://circ-supply-hoodi.testnet.fi/api
 
 ## Circ supply calculations
 
