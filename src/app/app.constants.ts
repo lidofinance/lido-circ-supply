@@ -5,7 +5,6 @@ import { join } from 'path';
 // npm_package_* env variables are not set — read package.json instead
 const packageJson = JSON.parse(readFileSync(join(__dirname, '..', '..', 'package.json'), 'utf8'));
 
-export const APP_VERSION: string = packageJson.version;
 export const APP_NAME: string = packageJson.name;
 export const APP_DESCRIPTION: string = packageJson.description;
 
@@ -31,5 +30,8 @@ const getBuildInfoField = (field: string): string => {
   return value;
 };
 
+// Releases no longer bump package.json; CI writes the release tag into build-info.json
+const buildVersion = getBuildInfoField('version');
+export const APP_VERSION: string = buildVersion === 'unknown' ? packageJson.version : buildVersion;
 export const APP_BRANCH: string = getBuildInfoField('branch');
 export const APP_COMMIT: string = getBuildInfoField('commit');

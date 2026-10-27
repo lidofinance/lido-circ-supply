@@ -1,25 +1,21 @@
 name: CI K8s Prod
 
-run-name: Build and push lido-circ-supply:${{ inputs.tag || github.ref_name }} to production
+run-name: Build and push lido-circ-supply:${{ github.ref_name }} to production
 
 on:
+  release:
+    types: [released]
   workflow_dispatch:
-  workflow_call:
-    inputs:
-      tag:
-        description: "release tag to build"
-        required: true
-        type: string
 
 permissions:
   contents: read
 
 jobs:
   build-and-push:
-    if: inputs.tag != '' || github.ref_type == 'tag'
+    if: github.ref_type == 'tag'
     uses: lidofinance/actions/.github/workflows/k8s-build-push-harbor.yml@c7b5b6c5d8013046347d728d748fa741eb214e28
     with:
-      tag: ${{ inputs.tag || github.ref_name }}
+      tag: ${{ github.ref_name }}
       registry: registry.prod.k8s-prod.org
       registry_username: robot$team-daotech-rw
       image: team-daotech/lido-circ-supply
