@@ -10,7 +10,8 @@ import { ConfigService } from 'common/config';
 import { AppModule, APP_DESCRIPTION, APP_NAME, APP_VERSION } from 'app';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter({ trustProxy: true }), {
+  // request.ip is the raw socket peer; X-Forwarded-For is not trusted.
+  const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter({ trustProxy: false }), {
     bufferLogs: true,
   });
 
