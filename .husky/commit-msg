@@ -1,0 +1,6 @@
+# Conventional Commits: the release workflow derives the version bump and the
+# CHANGELOG from the commit types (feat -> minor, fix -> patch).
+if ! head -1 "$1" | grep -qE '^(fixup! |squash! |Merge |Revert |(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\([^)]+\))?!?: .+)'; then
+  echo "Commit message must follow Conventional Commits, e.g. 'fix(deps): bump fastify to 5.12.8'" >&2
+  exit 1
+fi
