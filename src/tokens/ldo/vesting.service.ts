@@ -29,10 +29,8 @@ export class LdoVestingService {
       this.burnsService.collectBurnsAddresses(blockInfo),
     ]);
 
-    const updatedMembers = members.updatedAddresses;
-
     const [vestings, balances] = await Promise.all([
-      this.vestingsService.collectMembersVestings(updatedMembers, blockInfo),
+      this.vestingsService.collectMembersVestings(members.updatedAddresses, members.allAddresses, blockInfo),
       this.balanceService.fetchHoldersBalances(burns.allAddresses, blockInfo),
     ]);
 

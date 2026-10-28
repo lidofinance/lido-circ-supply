@@ -12,11 +12,12 @@
     "baseUrl": "./src",
     "incremental": true,
     "skipLibCheck": true,
+    "resolveJsonModule": true,
     "strictNullChecks": false,
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "scripts/**/*"]
 }

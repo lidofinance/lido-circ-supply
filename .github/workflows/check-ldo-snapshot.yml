@@ -1,0 +1,32 @@
+name: Check LDO events snapshot
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'src/tokens/ldo/**'
+      - 'src/common/provider/**'
+      - 'scripts/ldo-snapshot.ts'
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+      - name: Set up node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 'lts/*'
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Check snapshot against chain
+        run: yarn ldo-snapshot:check
+        env:
+          EL_API_URLS: ${{ secrets.MAINNET_RPC_URL }}
