@@ -49,12 +49,12 @@ export class EnvironmentVariables {
   @IsOptional()
   @IsEnum(LogLevel)
   @Transform(({ value }) => value || LogLevel.info)
-  LOG_LEVEL: LogLevel;
+  LOG_LEVEL: LogLevel = LogLevel.info;
 
   @IsOptional()
   @IsEnum(LogFormat)
   @Transform(({ value }) => value || LogFormat.json)
-  LOG_FORMAT: LogFormat;
+  LOG_FORMAT: LogFormat = LogFormat.json;
 
   @IsArray()
   @ArrayMinSize(1)

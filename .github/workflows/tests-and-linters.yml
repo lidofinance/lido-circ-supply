@@ -1,20 +1,77 @@
-name: Run tests and linters
-on: pull_request
+name: Tests and linters
+
+on:
+  pull_request:
+  push:
+    branches: [develop, main]
+
+permissions:
+  contents: read
 
 jobs:
   test:
+    name: Lint, build and test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
-      - name: Set up node
-        uses: actions/setup-node@v3
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
-          node-version: 'lts/*'
+          persist-credentials: false
+      - name: Set up node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version-file: .nvmrc
           cache: 'yarn'
       - name: Install dependencies
-        run: yarn install --immutable
-      - name: Run lint
-        run: yarn lint
-      # - name: Run tests
-      #   run: yarn test
+        run: yarn install --frozen-lockfile --ignore-scripts
+      - name: Lint
+        run: yarn lint:check
+      - name: Check formatting
+        run: yarn format:check
+      - name: Typecheck
+        run: yarn typecheck
+      - name: Build
+        run: yarn build
+      - name: Unit tests
+        run: yarn test --coverage
+      - name: E2E tests
+        run: yarn test:e2e
+
+  audit:
+    name: Audit production dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - name: Set up node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version-file: .nvmrc
+      # Yarn 1 exits with a severity bitmask regardless of --level: 8 = high, 16 = critical
+      - name: Fail on high or critical advisories
+        run: |
+          yarn audit --groups dependencies --level high || code=$?
+          if [ $(( ${code:-0} & 24 )) -ne 0 ]; then
+            echo "::error::High or critical advisories in production dependencies"
+            exit 1
+          fi
+
+  docker:
+    name: Build the Docker image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - name: Build
+        run: docker build --build-arg BUILD_VERSION=ci --build-arg BUILD_BRANCH="$GITHUB_REF_NAME" --build-arg BUILD_COMMIT="$GITHUB_SHA" -t lido-circ-supply:ci .
+      - name: Check the runtime image
+        run: |
+          docker run --rm lido-circ-supply:ci node -e "require('fs').accessSync('/app/dist/main.js'); console.log(require('/app/build-info.json'))"
+          if docker run --rm lido-circ-supply:ci sh -c 'command -v yarn || command -v npm'; then
+            echo "::error::Package managers must not be present in the runtime image"
+            exit 1
+          fi

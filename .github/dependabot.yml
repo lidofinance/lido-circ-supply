@@ -1,0 +1,33 @@
+# The app is in maintenance mode: dependencies move only for security fixes
+# and bugs. Grouped PRs keep the review surface small; majors stay separate.
+version: 2
+updates:
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    commit-message:
+      prefix: 'ci(deps)'
+
+  - package-ecosystem: 'docker'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    commit-message:
+      prefix: 'build(deps)'
+
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: 'fix(deps)'
+      prefix-development: 'chore(deps)'
+    groups:
+      production-minor-patch:
+        dependency-type: 'production'
+        update-types: ['minor', 'patch']
+      development-minor-patch:
+        dependency-type: 'development'
+        update-types: ['minor', 'patch']

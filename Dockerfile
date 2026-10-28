@@ -1,25 +1,26 @@
-FROM node:22-alpine AS building
+FROM node:22.23.4-alpine3.24 AS building
 
 WORKDIR /app
 
 COPY package.json yarn.lock ./
 
-RUN yarn install --frozen-lockfile --non-interactive && yarn cache clean
+# --ignore-scripts: no dependency needs an install script, so none gets to run in the build
+RUN yarn install --frozen-lockfile --non-interactive --ignore-scripts && yarn cache clean
 
 COPY ./tsconfig*.json ./
 COPY ./src ./src
 
 RUN yarn build
 
-FROM node:22-alpine AS production-deps
+FROM node:22.23.4-alpine3.24 AS production-deps
 
 WORKDIR /app
 
 COPY package.json yarn.lock ./
 
-RUN yarn install --production --frozen-lockfile --non-interactive && yarn cache clean
+RUN yarn install --production --frozen-lockfile --non-interactive --ignore-scripts && yarn cache clean
 
-FROM node:22-alpine
+FROM node:22.23.4-alpine3.24
 
 WORKDIR /app
 

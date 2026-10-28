@@ -121,13 +121,16 @@ The data for all endpoints is updated by the cron job. The update interval is se
 
 ## Development
 
-Step 1. Copy the contents of `sample.env` to `.env`:
+The app is in maintenance mode: it receives dependency, security and bug fixes only. The
+tooling below exists so that those changes can be shipped with confidence.
+
+Step 1. Use Node 22 (see `.nvmrc`) and copy the contents of `sample.env` to `.env`:
 
 ```bash
 $ cp sample.env .env
 ```
 
-Step 2. Install dependencies:
+Step 2. Install dependencies. This also installs the git hooks (husky):
 
 ```bash
 $ yarn install
@@ -138,6 +141,52 @@ Step 3. Start the development server
 ```bash
 $ yarn start:dev
 ```
+
+### Git hooks
+
+| Hook         | Runs                                                 |
+| ------------ | ---------------------------------------------------- |
+| `pre-commit` | `eslint --fix` and `prettier` on the staged files    |
+| `commit-msg` | Conventional Commits format check (see Release flow) |
+| `pre-push`   | `yarn typecheck` and the unit tests                  |
+
+The release tooling derives the version bump and the changelog from the commit types, so
+commits must follow [Conventional Commits](https://www.conventionalcommits.org): `fix:` and
+`fix(deps):` produce a patch release, `feat:` a minor one.
+
+Skip the hooks once with `git commit --no-verify` when you have to; CI runs the same checks anyway.
+
+### Checks
+
+```bash
+$ yarn lint:check     # eslint, no fixes
+$ yarn format:check   # prettier, no fixes
+$ yarn typecheck      # tsc --noEmit over src and test
+$ yarn test           # unit tests
+$ yarn test:cov       # unit tests with coverage
+$ yarn test:e2e       # boots the whole app against fake RPC and contracts
+```
+
+The e2e suite (`src/app/app.e2e-spec.ts`) is the main regression net for dependency bumps:
+it wires the real module graph, versioned routes, cache and `Cache-Control` headers, rate
+limiting, CORS, probes, metrics and Swagger. Unit specs sit next to the code they cover; the
+LDO locked-amount pipeline is covered end to end with fake contracts in
+`src/tokens/ldo/vesting.service.spec.ts`.
+
+### CI
+
+Every pull request and every push to `develop` and `main` runs ("Tests and linters"):
+
+- lint, formatting, typecheck, build, unit and e2e tests;
+- `yarn audit` on production dependencies, failing on high or critical advisories;
+- a Docker build of the runtime image, checking that `dist/main.js` is there and no package
+  manager is.
+
+"Tests and Checks" runs the shared Lido security, Docker and Actions linters.
+
+Dependabot opens weekly PRs for npm packages (minor and patch updates grouped, majors
+separate), GitHub Actions and the Docker base image. Their commit messages already follow
+Conventional Commits, so merging them feeds the release changelog.
 
 ## Running the app
 
@@ -152,19 +201,6 @@ $ yarn start:dev
 $ yarn start:prod
 ```
 
-## Test
-
-```bash
-# unit tests
-$ yarn test
-
-# e2e tests
-$ yarn test:e2e
-
-# test coverage
-$ yarn test:cov
-```
-
 ## Environment variables
 
 | Variable              | Required | Default       | Description                                                  |
@@ -177,8 +213,8 @@ $ yarn test:cov
 | GLOBAL_THROTTLE_LIMIT | No       | `100`         | The maximum number of requests within the TTL limit          |
 | GLOBAL_CACHE_TTL      | No       | `1`           | Cache expiration time in seconds                             |
 | SENTRY_DSN            | No       |               | Sentry DSN                                                   |
-| LOG_LEVEL             | No       | `json`        | Log level: debug, info, notice, warning or error             |
-| LOG_FORMAT            | No       | `debug`       | Log format: simple or json                                   |
+| LOG_LEVEL             | No       | `info`        | Log level: debug, info, notice, warning or error             |
+| LOG_FORMAT            | No       | `json`        | Log format: simple or json                                   |
 | TOKEN_UPDATE_CRON     | No       | `*/1 * * * *` | Token update cron job interval                               |
 
 The `sample.env` file contains examples of variable values.
