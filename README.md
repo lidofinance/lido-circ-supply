@@ -4,10 +4,10 @@ Service returns circulating supply for Lido tokens.
 
 ## Endpoints
 
-API service is deployed in the mainnet and testnet chains. A list of available endpoints can be found in the Swagger:
+API service is deployed on Ethereum mainnet and the Hoodi testnet. A list of available endpoints can be found in the Swagger:
 
 - Mainnet: https://circ-supply.lido.fi/api
-- Goerli: https://circ-supply.testnet.fi/api
+- Hoodi: https://circ-supply-hoodi.testnet.fi/api
 
 ## Circ supply calculations
 
@@ -204,15 +204,16 @@ Lido Circ Supply is [MIT licensed](LICENSE).
 
 ## Release flow
 
+Every merge to `main` creates or updates a draft release with the next version and the changelog
+so far.
+
 To create new release:
 
-1. Merge all changes to the `main` branch
-1. Navigate to Repo => Actions
-1. Run action "Prepare release" action against `main` branch
-1. When action execution is finished, navigate to Repo => Pull requests
-1. Find pull request named "chore(release): X.X.X" review and merge it with "Rebase and merge" (or "Squash and merge")
-1. After merge release action will be triggered automatically
+1. Navigate to Repo => Releases and open the draft. If there are several drafts, keep the highest version and delete the others
+1. Review the version and the notes, and edit them if needed
+1. Publish the release. This creates the tag on `main`
+1. Publishing triggers the prod builds for both infras: "CI Build prod image" for the classic infra
+   and "CI K8s Prod" for the k8s infra, which pushes the image to the prod registry as `<tag>`
 1. Navigate to Repo => Actions and see last actions logs for further details
 
-The release also builds the k8s prod image ("CI K8s Prod") and pushes it to the prod registry as
-`<tag>`. To rebuild an existing tag, run "CI K8s Prod" manually and pick the tag in "Use workflow from".
+To rebuild the k8s image for an existing tag, run "CI K8s Prod" manually and pick the tag in "Use workflow from".

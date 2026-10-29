@@ -1,0 +1,20 @@
+name: Prepare release draft
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+# Serialize runs so two quick pushes to main don't both create a draft for the same tag.
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  prepare-release-draft:
+    uses: lidofinance/actions/.github/workflows/prepare-release-draft.yml@c7b5b6c5d8013046347d728d748fa741eb214e28 # main
+    with:
+      target: main

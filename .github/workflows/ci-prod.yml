@@ -1,13 +1,8 @@
 name: CI Build prod image
 
 on:
-  workflow_call:
-    inputs:
-      tag:
-        description: "tag to deploy from"
-        default: ""
-        required: false
-        type: string
+  release:
+    types: [released]
 
 permissions:
   contents: read
@@ -28,14 +23,7 @@ jobs:
 
       - name: Tag name
         id: tag_name
-        run: |
-          if [ '${{ inputs.tag }}' = '' ]; then
-            echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
-          else
-            echo "TAG=$TAG" >> $GITHUB_OUTPUT
-          fi
-        env:
-          TAG: ${{ inputs.tag }}
+        run: echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
       - name: Build prod image
         uses: lidofinance/dispatch-workflow@v1
