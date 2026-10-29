@@ -119,6 +119,21 @@ TODO: add other chains support
 
 The data for all endpoints is updated by the cron job. The update interval is set via env variable `TOKEN_UPDATE_CRON`, which defaults `*/1 * * * *`.
 
+### LDO events snapshot
+
+On mainnet the LDO burn and vesting scans start from `src/tokens/ldo/snapshots/mainnet.json`: the addresses derived from LDO events from the deploy block up to `toBlock`. Only blocks after `toBlock` are scanned on start. Both commands need an archive RPC that serves `eth_getLogs`:
+
+```bash
+# fails if the addresses differ from chain events up to toBlock
+# CI passes MAINNET_RPC_URL here
+EL_API_URLS=<rpc url> yarn ldo-snapshot:check
+
+# move the snapshot forward to a finalized block (default: the current finalized block)
+EL_API_URLS=<rpc url> yarn ldo-snapshot:update [toBlock]
+```
+
+Never edit the file by hand. A stale snapshot only makes the first scan longer.
+
 ## Development
 
 Step 1. Copy the contents of `sample.env` to `.env`:
@@ -198,3 +213,6 @@ To create new release:
 1. Find pull request named "chore(release): X.X.X" review and merge it with "Rebase and merge" (or "Squash and merge")
 1. After merge release action will be triggered automatically
 1. Navigate to Repo => Actions and see last actions logs for further details
+
+The release also builds the k8s prod image ("CI K8s Prod") and pushes it to the prod registry as
+`<tag>`. To rebuild an existing tag, run "CI K8s Prod" manually and pick the tag in "Use workflow from".
