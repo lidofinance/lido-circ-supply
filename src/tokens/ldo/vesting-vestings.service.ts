@@ -21,20 +21,30 @@ export class LdoVestingVestingsService {
   protected membersVestings = new Map<string, VestingInfo[]>();
 
   /**
-   * Updates vestings for list of members
+   * Fetches vestings of updated members and of members with no vestings cached yet:
+   * members loaded from the snapshot, or new members whose first fetch failed
    */
   public async collectMembersVestings(
     updatedMembers: Set<string>,
+    allMembers: Set<string>,
     blockInfo: Block,
   ): Promise<{
     updatedVestings: Map<string, VestingInfo[]>;
     allVestings: Map<string, VestingInfo[]>;
   }> {
-    this.logger.debug('Collecting member vestings started', {
-      membersLength: updatedMembers.size,
+    const membersToFetch = new Set(updatedMembers);
+
+    allMembers.forEach((member) => {
+      if (!this.membersVestings.has(member)) {
+        membersToFetch.add(member);
+      }
     });
 
-    const updatedVestings = await this.fetchMembersVestings(updatedMembers, blockInfo);
+    this.logger.debug('Collecting member vestings started', {
+      membersLength: membersToFetch.size,
+    });
+
+    const updatedVestings = await this.fetchMembersVestings(membersToFetch, blockInfo);
 
     this.mergeVestings(updatedVestings);
     const allVestings = this.membersVestings;

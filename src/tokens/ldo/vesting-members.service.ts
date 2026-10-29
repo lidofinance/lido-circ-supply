@@ -5,9 +5,11 @@ import {
 } from '@lido-nestjs/contracts';
 import { LOGGER_PROVIDER } from '@lido-nestjs/logger';
 import { Block } from '@ethersproject/abstract-provider';
+import { ConfigService } from 'common/config';
 import { PrometheusService } from 'common/prometheus';
-import { queryFilterInChunks } from 'common/provider';
 import { OVERLAPPING_REORG_OFFSET } from './ldo.constants';
+import { fetchVestingMembers } from './ldo-events';
+import { getLdoScanStart } from './ldo-snapshot';
 
 @Injectable()
 export class LdoVestingMembersService {
@@ -16,6 +18,7 @@ export class LdoVestingMembersService {
     @Inject(CONTRACT_TOKEN) protected readonly tmContract: TokenManager,
 
     protected readonly prometheusService: PrometheusService,
+    protected readonly configService: ConfigService,
   ) {}
 
   protected membersAddresses = new Set<string>();
@@ -32,35 +35,20 @@ export class LdoVestingMembersService {
     const fromBlockOffset = OVERLAPPING_REORG_OFFSET;
     const lastFetchedBlock = this.lastFetchedBlock ?? null;
 
-    const fromBlock = lastFetchedBlock ? lastFetchedBlock - fromBlockOffset : 0;
-    const toBlock = blockInfo.number;
+    const scanStart = getLdoScanStart(this.configService.get('CHAIN_ID'));
+    if (lastFetchedBlock === null) {
+      this.mergeAddresses(new Set(scanStart.snapshot?.vestingMembers));
+    }
 
-    /**
-     * Since we get updates only for new blocks while the server is running,
-     * we also look at RevokeVesting events to make sure that vestings will be
-     * updated in the case of a vesting revoke
-     */
-    const newFilter = this.tmContract.filters.NewVesting();
-    const revokeFilter = this.tmContract.filters.RevokeVesting();
+    const fromBlock = lastFetchedBlock ? lastFetchedBlock - fromBlockOffset : scanStart.fromBlock;
+    const toBlock = blockInfo.number;
 
     this.logger.debug('Collecting vesting members started', {
       fromBlock,
       toBlock,
     });
 
-    const [newEvents, revokeEvents] = await Promise.all([
-      queryFilterInChunks(fromBlock, toBlock, (chunkFromBlock, chunkToBlock) =>
-        this.tmContract.queryFilter(newFilter, chunkFromBlock, chunkToBlock),
-      ),
-      queryFilterInChunks(fromBlock, toBlock, (chunkFromBlock, chunkToBlock) =>
-        this.tmContract.queryFilter(revokeFilter, chunkFromBlock, chunkToBlock),
-      ),
-    ]);
-
-    const updatedAddresses = new Set<string>();
-
-    newEvents.forEach((event) => updatedAddresses.add(event.args.receiver));
-    revokeEvents.forEach((event) => updatedAddresses.add(event.args.receiver));
+    const updatedAddresses = await fetchVestingMembers(this.tmContract, fromBlock, toBlock);
 
     this.mergeAddresses(updatedAddresses);
     this.lastFetchedBlock = toBlock;
